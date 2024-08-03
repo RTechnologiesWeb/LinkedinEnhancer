@@ -30,7 +30,12 @@ SECRET_KEY = os.getenv('DJANGO_SECRET')
 DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
-CSRF_TRUSTED_ORIGINS = ['*']
+CSRF_TRUSTED_ORIGINS = [
+    'https://linkedinenhancer-production.up.railway.app',
+]
+
+
+CSRF_FAILURE_VIEW = 'linkedin.views.csrf_failure'
 
 # Application definition
 
