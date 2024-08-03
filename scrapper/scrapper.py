@@ -25,6 +25,9 @@ class Scrapper:
         # chrome_options.add_experimental_option("excludeSwitches", ["enable-logging"])
         # self.chrome_options.add_argument('--log-level 3') 
         # self.chrome_options.add_argument("--headless")
+        self.chrome_options.add_argument("--no-sandbox")
+        self.chrome_options.add_argument("--disable-dev-shm-usage")
+        self.chrome_options.add_argument("--disable-gpu")
 
     def scrape(self,url) -> str:
         """Tries to scrape linkedin profile and returns about and headline throws if unsuccessful"""
@@ -35,7 +38,7 @@ class Scrapper:
         print(url)
         driver.get(url)
         print("sleeping")
-        time.sleep(3)
+        time.sleep(2)
         print("sleep over")
         tries = 0
         while driver.current_url != url:
@@ -45,10 +48,10 @@ class Scrapper:
             print("redirected to signup page")
             print(driver.current_url)
             driver.get(url)
-            time.sleep(2)
+            time.sleep(1)
             tries += 1
             
-        time.sleep(5)
+        time.sleep(1)
         try:
             driver.find_element(by=By.CSS_SELECTOR,value='#base-contextual-sign-in-modal > div > section > button').click()
             print("clicked")
@@ -61,7 +64,7 @@ class Scrapper:
             except:
                 print("could not find button")
 
-        time.sleep(2)
+        time.sleep(1)
         # with open('test.html', 'w', encoding='utf-8') as file:
         #     file.write(driver.page_source)
         print("writting page source for inspection")

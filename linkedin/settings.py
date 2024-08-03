@@ -35,7 +35,7 @@ CSRF_TRUSTED_ORIGINS = [
 ]
 
 
-CSRF_FAILURE_VIEW = 'linkedin.views.csrf_failure'
+# CSRF_FAILURE_VIEW = 'views.csrf_failure'
 
 # Application definition
 
