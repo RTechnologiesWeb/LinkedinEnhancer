@@ -15,8 +15,11 @@ from langchain_core.messages import SystemMessage
 from langchain_core.prompts import HumanMessagePromptTemplate
 import os
 
+from dotenv import load_dotenv
+load_dotenv()
 
-API_KEY = os.environ.get('OPENAI_API_KEY')
+# API_KEY = os.environ.get('OPENAI_API_KEY')
+API_KEY = os.getenv('OPENAI_API_KEY')
 
 class LLM_Bot:
     def __init__(self) -> None:
