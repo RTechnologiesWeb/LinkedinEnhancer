@@ -13,6 +13,7 @@ import base64
 from selenium.webdriver.chrome.service import Service as ChromeService
 from webdriver_manager.chrome import ChromeDriverManager
 from django.conf import settings
+from selenium.webdriver.chrome.service import Service
 
 class ScrapeException(Exception):
     """Custom exception for scrape errors"""
@@ -29,8 +30,10 @@ class Scrapper:
 
     def scrape(self,url) -> str:
         """Tries to scrape linkedin profile and returns about and headline throws if unsuccessful"""
-        driver_path = settings.BASE_DIR + '/scrapper/chromedriver'
-        driver = webdriver.Chrome(executable_path=driver_path,
+        baseDir = settings.BASE_DIR
+        driver_path = f"{baseDir}/scrapper/chromedriver"
+        service = Service(executable_path=driver_path)
+        driver = webdriver.Chrome(service=service,
                                   options=self.chrome_options)
         # driver = webdriver.Chrome(options=self.chrome_options) 
 
