@@ -26,8 +26,8 @@ class Scrapper:
         self.chrome_options.add_argument("--start-maximized")
         # chrome_options.add_experimental_option("excludeSwitches", ["enable-logging"])
         # self.chrome_options.add_argument('--log-level 3') 
-        baseDir = settings.BASE_DIR
-        self.driver_path = f"{baseDir}/scrapper/chromedriver"
+        
+        self.driver_path =  os.path.join(settings.BASE_DIR, 'scrapper', 'chromedriver')
         self.chrome_options.add_argument("--headless")
         os.chmod(self.driver_path, 0o755)
     def scrape(self,url) -> str:
