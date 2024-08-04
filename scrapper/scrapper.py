@@ -12,7 +12,7 @@ from io import BytesIO
 import base64
 from selenium.webdriver.chrome.service import Service as ChromeService
 from webdriver_manager.chrome import ChromeDriverManager
-from djang.conf import settings
+from django.conf import settings
 
 class ScrapeException(Exception):
     """Custom exception for scrape errors"""
