@@ -32,6 +32,8 @@ class Scrapper:
         os.chmod(self.driver_path, 0o755)
     def scrape(self,url) -> str:
         driver_path =self.driver_path
+        cwd = os.getcwd()
+        
         service = Service(executable_path=self.driver_path)
         """Tries to scrape linkedin profile and returns about and headline throws if unsuccessful"""
         driver = webdriver.Chrome(service=service,
