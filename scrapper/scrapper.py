@@ -29,7 +29,11 @@ class Scrapper:
 
     def scrape(self,url) -> str:
         """Tries to scrape linkedin profile and returns about and headline throws if unsuccessful"""
-        driver  = webdriver.Chrome(ChromeDriverManager().install())
+        try:
+            service = ChromeService(ChromeDriverManager().install())
+            driver = webdriver.Chrome(service=service,options=self.chrome_options)
+        except:
+            raise(f"could not install driver {service}")
         # driver = webdriver.Chrome(options=self.chrome_options) 
 
         print("here")
