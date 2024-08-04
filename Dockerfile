@@ -43,7 +43,7 @@ RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key
 # Set display port to avoid crash
 ENV DISPLAY=:99
 
-# Copy the current directory contents into the container at /app
+# Copy the current directory contents into the container at /linkedin
 COPY . /linkedin
 
 # Install Python packages
@@ -54,4 +54,4 @@ RUN pip install -r requirements.txt
 EXPOSE 6816
 
 # Run the application
-CMD ["gunicorn", "-b", "0.0.0.0:6816", "app:app"]
+CMD ["gunicorn", "-b", "0.0.0.0:6816", "linkedin.wsgi:application"]
