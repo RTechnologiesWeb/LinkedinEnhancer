@@ -7,7 +7,8 @@ import time
 from langchain.chains import LLMChain
 from langchain_core.prompts import PromptTemplate
 from langchain_openai.chat_models import ChatOpenAI
-from selenium.webdriver.chrome.options import Options
+
+
 import os
 
 from langchain_core.prompts import ChatPromptTemplate
