@@ -2,7 +2,7 @@
 FROM python:3.12.4
 
 # Set the working directory in the container
-WORKDIR /app
+WORKDIR /linkedin
 
 # Install dependencies
 RUN apt-get update && apt-get install -y \
@@ -44,7 +44,7 @@ RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key
 ENV DISPLAY=:99
 
 # Copy the current directory contents into the container at /app
-COPY . /app
+COPY . /linkedin
 
 # Install Python packages
 RUN pip install --upgrade pip
