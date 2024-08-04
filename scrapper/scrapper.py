@@ -25,7 +25,7 @@ class Scrapper:
         self.chrome_options.add_argument("--start-maximized")
         # chrome_options.add_experimental_option("excludeSwitches", ["enable-logging"])
         # self.chrome_options.add_argument('--log-level 3') 
-        # self.chrome_options.add_argument("--headless")
+        self.chrome_options.add_argument("--headless")
 
     def scrape(self,url) -> str:
         """Tries to scrape linkedin profile and returns about and headline throws if unsuccessful"""
