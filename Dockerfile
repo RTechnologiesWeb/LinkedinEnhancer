@@ -15,7 +15,6 @@ RUN apt-get update && apt-get install -y \
     libnss3-dev \
     libxss1 \
     libappindicator1 \
-    libindicator7 \
     fonts-liberation \
     libappindicator3-1 \
     libasound2 \
