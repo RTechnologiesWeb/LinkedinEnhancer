@@ -1,4 +1,5 @@
 from typing import Any
+from openai import RateLimitError
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
@@ -71,36 +72,67 @@ class LLM_Bot:
         self.chain_general_obs = LLMChain(llm =self.llm, prompt=self.general_obs_prompt)
         self.second_chain = LLMChain(llm =self.llm, prompt=self.second_prompt)
 
-    def getQuestions(self,about:str,headline:str) -> Any:
-        while 1:
-            res = self.chain_first.invoke({'about': about,'headline': headline})
-            print(res['text'])
-            try:     
-                question_raw = (res['text'].split('```') [1] )
+    # def getQuestions(self,about:str,headline:str) -> Any:
+    #     while 1:
+    #         res = self.chain_first.invoke({'about': about,'headline': headline})
+    #         print(res['text'])
+    #         try:     
+    #             question_raw = (res['text'].split('```') [1] )
 
+    #             questions_split = question_raw.split('\n')
+
+    #             questions_split = [q for q in questions_split if len(q.split(' ')) > 3 ]
+    #             if len(questions_split) <1:
+    #                 continue
+    #             return questions_split    
+    #         except:
+    #             continue
+
+    def getQuestions(self, about: str, headline: str) -> Any:
+        while True:
+            try:
+                res = self.chain_first.invoke({'about': about, 'headline': headline})
+                print(res['text'])
+                question_raw = (res['text'].split('```')[1])
                 questions_split = question_raw.split('\n')
-
-                questions_split = [q for q in questions_split if len(q.split(' ')) > 3 ]
-                if len(questions_split) <1:
+                questions_split = [q for q in questions_split if len(q.split(' ')) > 3]
+                if len(questions_split) < 1:
                     continue
-                return questions_split    
-            except:
+                return questions_split
+            except RateLimitError as e:
+                print("Rate limit exceeded. Please try again later.")
+                # Implement logic to handle the rate limit, e.g., retry after some time
+                time.sleep(60)  # Sleep for 60 seconds before retrying
+            except Exception as e:
+                print(f"An error occurred: {e}")
                 continue
 
-    def get_gen_obs(self,data:str) -> str:
+    # def get_gen_obs(self,data:str) -> str:
 
-        res = self.chain_general_obs.invoke({'profile': data})
-        return res['text']
-    def getNewAbout(self,about:str,headline:str,qa: str) -> str:
+    #     res = self.chain_general_obs.invoke({'profile': data})
+    #     return res['text']
 
-        res = self.second_chain.invoke({'about': about,'headline': headline , 'qa':qa})
-
-        return res['text']
-            
-
-
-
-if __name__ == "__main__":
-
-
-    print("abc")
+    def get_gen_obs(self, data: str) -> str:
+        try:
+            res = self.chain_general_obs.invoke({'profile': data})
+            return res['text']
+        except RateLimitError as e:
+            print("Rate limit exceeded. Please try again later.")
+            # Implement logic to handle the rate limit
+            time.sleep(60)  # Sleep for 60 seconds before retrying
+        except Exception as e:
+            print(f"An error occurred: {e}")
+            return ""
+        
+    
+    def getNewAbout(self, about: str, headline: str, qa: str) -> str:
+        try:
+            res = self.second_chain.invoke({'about': about, 'headline': headline, 'qa': qa})
+            return res['text']
+        except RateLimitError as e:
+            print("Rate limit exceeded. Please try again later.")
+            # Implement logic to handle the rate limit
+            time.sleep(60)  # Sleep for 60 seconds before retrying
+        except Exception as e:
+            print(f"An error occurred: {e}")
+            return ""

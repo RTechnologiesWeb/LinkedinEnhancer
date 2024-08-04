@@ -16,6 +16,7 @@ def scrape(request):
     return redirect('index')
 
 
+
 def csrf_failure(request, reason=""):
     ctx = {'reason': reason}
     return HttpResponseForbidden(render_to_string('403_csrf.html', ctx))

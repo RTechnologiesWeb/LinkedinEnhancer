@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.shortcuts import redirect
-from scrapper.scrapper import Scrapper
+from scrapper.scrapper import ScrapeException, Scrapper
 from scrapper.llm_bot import LLM_Bot
 from django.contrib import messages
 import json
@@ -14,26 +14,49 @@ def index(request):
     return render(request, 'index.html')
 
 
+# def scrape(request):
+#     if request.method == 'POST':
+#         url = request.POST.get('url')
+#         if not url.startswith('https'):
+#             messages.error(request, 'Please enter a valid URL starting with https://')
+#             return redirect ('index')
+#         print(url)
+#         try:
+#             data,screenshot = scrapper.scrape(rf"{url}")
+#             request.session['data'] = data
+#             print(request.session['data'],type(request.session['data']))
+#         except Exception as e:
+#             print("exception occured")
+#             print(e)
+#             messages.error(request, 'Could not scrape your profile please manually fill this form')
+            
+#             return redirect ('manualUpload')
+
+
+#         return render(request, 'scrape.html',{'url':url,'screenshot':screenshot})
+#     return redirect('index')
+
+
 def scrape(request):
     if request.method == 'POST':
         url = request.POST.get('url')
         if not url.startswith('https'):
             messages.error(request, 'Please enter a valid URL starting with https://')
-            return redirect ('index')
+            return redirect('index')
+
         print(url)
+        scrapper = Scrapper()
         try:
-            data,screenshot = scrapper.scrape(rf"{url}")
+            data, screenshot = scrapper.scrape(url)
             request.session['data'] = data
-            print(request.session['data'],type(request.session['data']))
-        except Exception as e:
-            print("exception occured")
+            print(request.session['data'], type(request.session['data']))
+        except ScrapeException as e:
+            print("exception occurred")
             print(e)
-            messages.error(request, 'Could not scrape your profile please manually fill this form')
-            
-            return redirect ('manualUpload')
+            messages.error(request, 'Could not scrape your profile. Please manually fill this form')
+            return redirect('manualUpload')
 
-
-        return render(request, 'scrape.html',{'url':url,'screenshot':screenshot})
+        return render(request, 'scrape.html', {'url': url, 'screenshot': screenshot})
     return redirect('index')
 
 
