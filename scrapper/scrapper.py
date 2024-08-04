@@ -26,13 +26,13 @@ class Scrapper:
         self.chrome_options.add_argument("--start-maximized")
         # chrome_options.add_experimental_option("excludeSwitches", ["enable-logging"])
         # self.chrome_options.add_argument('--log-level 3') 
-        self.chrome_options.add_argument("--headless")
-
-    def scrape(self,url) -> str:
-        """Tries to scrape linkedin profile and returns about and headline throws if unsuccessful"""
         baseDir = settings.BASE_DIR
-        driver_path = f"{baseDir}/scrapper/chromedriver"
-        service = Service(executable_path=driver_path)
+        self.driver_path = f"{baseDir}/scrapper/chromedriver"
+        self.chrome_options.add_argument("--headless")
+        os.chmod(self.driver_path, 0o755)
+    def scrape(self,url) -> str:
+        service = Service(executable_path=self.driver_path)
+        """Tries to scrape linkedin profile and returns about and headline throws if unsuccessful"""
         driver = webdriver.Chrome(service=service,
                                   options=self.chrome_options)
         # driver = webdriver.Chrome(options=self.chrome_options) 
