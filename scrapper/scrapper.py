@@ -6,6 +6,8 @@ import time
 from langchain.chains import LLMChain
 from langchain_core.prompts import PromptTemplate
 from langchain_mistralai.chat_models import ChatMistralAI
+from selenium.webdriver.chrome.service import Service as ChromeService
+from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.chrome.options import Options
 import os
 from io import BytesIO
@@ -31,7 +33,7 @@ class Scrapper:
 
     def scrape(self,url) -> str:
         """Tries to scrape linkedin profile and returns about and headline throws if unsuccessful"""
-
+        service = ChromeService(ChromeDriverManager().install())
         driver = webdriver.Chrome(options=self.chrome_options) 
 
         print("here")
@@ -124,8 +126,3 @@ class Scrapper:
             'education':eduDetails
         } , screenshot
         
-
-
-if __name__ == "__main__":
-    scrapper = Scrapper()
-    scrapper.scrape("https://www.linkedin.com/in/talha-satti786/")
