@@ -30,7 +30,7 @@ class Scrapper:
     def scrape(self,url) -> str:
         """Tries to scrape linkedin profile and returns about and headline throws if unsuccessful"""
         driver_path = settings.BASE_DIR + '/scrapper/chromedriver'
-        driver = webdriver.Chrome(executable_path=,
+        driver = webdriver.Chrome(executable_path=driver_path,
                                   options=self.chrome_options)
         # driver = webdriver.Chrome(options=self.chrome_options) 
 
