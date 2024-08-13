@@ -15,6 +15,9 @@ from webdriver_manager.chrome import ChromeDriverManager
 from django.conf import settings
 from selenium.webdriver.chrome.service import Service
 
+import logging
+logger = logging.getLogger(__name__)
+
 class ScrapeException(Exception):
     """Custom exception for scrape errors"""
     pass
@@ -23,36 +26,28 @@ class ScrapeException(Exception):
 class Scrapper:
     def __init__(self):
         self.chrome_options = Options()
-        self.chrome_options.add_argument("--start-maximized")
+        
         # chrome_options.add_experimental_option("excludeSwitches", ["enable-logging"])
         # self.chrome_options.add_argument('--log-level 3') 
-        
-        self.driver_path =  os.path.join(settings.BASE_DIR, 'scrapper', 'chromedriver')
+        self.chrome_options.add_argument("--no-sandbox")
+        self.chrome_options.add_argument("--disable-dev-shm-usage")
+        self.chrome_options.add_argument("--disable-gpu")
         self.chrome_options.add_argument("--headless")
-        os.chmod(self.driver_path, 0o755)
     def scrape(self,url) -> str:
-        driver_path =self.driver_path
         cwd = os.getcwd()
         
-        service = Service(executable_path=self.driver_path)
         """Tries to scrape linkedin profile and returns about and headline throws if unsuccessful"""
-        driver = webdriver.Chrome(service=service,
-                                  options=self.chrome_options)
+        driver = webdriver.Chrome(options=self.chrome_options)
         # driver = webdriver.Chrome(options=self.chrome_options) 
 
-        print("here")
-        print(url)
-        driver.get(url)
-        print("sleeping")
-        time.sleep(3)
-        print("sleep over")
+        logger.info('driver initialized url is %s',url)
         tries = 0
         while driver.current_url != url:
             if tries > 10:
                 raise ScrapeException("Could not Scrape page")
             
-            print("redirected to signup page")
-            print(driver.current_url)
+            logger.info("redirected to signup page")
+            logger.info(driver.current_url)
             driver.get(url)
             time.sleep(2)
             tries += 1
@@ -60,20 +55,19 @@ class Scrapper:
         time.sleep(5)
         try:
             driver.find_element(by=By.CSS_SELECTOR,value='#base-contextual-sign-in-modal > div > section > button').click()
-            print("clicked")
+            logger.info("clicked")
         except:
-            print("could not find button ")
+            logger.info("could not find button ")
             try:
                 driver.find_element(by=By.CSS_SELECTOR,value='#public_profile_contextual-sign-in > div > section > button').click()
-                print("clicked button 2")
+                logger.info("clicked button 2")
 
             except:
-                print("could not find button")
+                logger.info("could not find button")
 
         time.sleep(2)
         # with open('test.html', 'w', encoding='utf-8') as file:
         #     file.write(driver.page_source)
-        print("writting page source for inspection")
         about = driver.find_element(by=By.CSS_SELECTOR,value='section.core-section-container:nth-child(2) > div:nth-child(2) > p:nth-child(1)').text
 
 

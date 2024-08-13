@@ -4,6 +4,8 @@ from scrapper.scrapper import ScrapeException, Scrapper
 from scrapper.llm_bot import LLM_Bot
 from django.contrib import messages
 import json
+import logging
+logger = logging.getLogger(__name__)
 
 
 scrapper = Scrapper()
@@ -44,15 +46,12 @@ def scrape(request):
             messages.error(request, 'Please enter a valid URL starting with https://')
             return redirect('index')
 
-        print(url)
         scrapper = Scrapper()
         try:
             data, screenshot = scrapper.scrape(url)
             request.session['data'] = data
-            print(request.session['data'], type(request.session['data']))
         except ScrapeException as e:
-            print("exception occurred")
-            print(e)
+            logger.info("exception occurred while scraping %s", e)
             messages.error(request, 'Could not scrape your profile. Please manually fill this form')
             return redirect('manualUpload')
 
@@ -64,7 +63,6 @@ def scrape(request):
 def getQuestions(request):
     if request.method == 'POST':
         if 'data' not  in request.session:
-            print("data variable not in session")
             return redirect('index')
 
         data = request.session['data']
@@ -74,7 +72,6 @@ def getQuestions(request):
         questions = llm_bot.getQuestions(about,headline)
         # questions = questions[:-1]
         numOfQuestions = len(questions)
-        print(questions)
         return render(request, 'questions.html',{'questions':questions,
                                                  'numOfQuestions':numOfQuestions,
                                                  "about":about,
@@ -85,7 +82,6 @@ def getQuestions(request):
 def getRecommendation(request):
     if request.method == 'POST':
         if 'data' not  in request.session:
-            print("data variable not in session")
             return redirect('index')
         
         data = request.session['data']
@@ -100,14 +96,11 @@ def getRecommendation(request):
             qa += f"Answer {i}: {answer}\n"
                 
 
-        print(qa)
         suggestions = llm_bot.getNewAbout(about,headline,qa)
-        print('printing suggestions')
-        print(suggestions)
+
 
         extra_suggestions = llm_bot.get_gen_obs(json.dumps(data))
 
-        print(extra_suggestions)
 
         return render(request, 'recommendation.html',{'suggestions':suggestions,'extra_suggestions':extra_suggestions})
 
