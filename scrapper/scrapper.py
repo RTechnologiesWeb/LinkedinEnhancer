@@ -29,24 +29,35 @@ class ScrapeException(Exception):
 class Scrapper:
     def __init__(self):
         self.chrome_options = Options() 
-        # self.chrome_options.add_argument("--start-maximized")
-        self.chrome_options.add_argument("--no-sandbox")
-        self.chrome_options.add_argument("--disable-dev-shm-usage")
-        self.chrome_options.add_argument("--disable-gpu")
-        self.chrome_options.add_argument("--headless")
+        self.chrome_options.add_argument("--start-maximized")
+        # self.chrome_options.add_argument("--no-sandbox")
+        # self.chrome_options.add_argument("--disable-gpu")
+        # self.chrome_options.add_argument("--headless")
 
+        while 1:
+            self.driver = webdriver.Chrome(options=self.chrome_options)
+            # driver = webdriver.Chrome(options=self.chrome_options) 
+            self.driver.get("https://www.linkedin.com/login")
 
-        self.driver = webdriver.Chrome(options=self.chrome_options)
-        # driver = webdriver.Chrome(options=self.chrome_options) 
-        self.driver.get("https://www.linkedin.com/login")
+            mail = os.environ['LINKEDIN_MAIL']
+            password = os.environ['LINKEDIN_PASS']
+            self.driver.find_element(by = By.CSS_SELECTOR,value='#username').send_keys(mail)
+            time.sleep(3)
+            self.driver.find_element(by = By.CSS_SELECTOR,value='#password').send_keys(password)
+            time.sleep(3)
+            self.driver.find_element(by=By.CSS_SELECTOR,value='#organic-div > form > div.login__form_action_container > button').click()
 
-        mail = os.environ['LINKEDIN_MAIL']
-        password = os.environ['LINKEDIN_PASS']
-        self.driver.find_element(by = By.CSS_SELECTOR,value='#username').send_keys(mail)
-        self.driver.find_element(by = By.CSS_SELECTOR,value='#password').send_keys(password)
-        self.driver.find_element(by=By.CSS_SELECTOR,value='#organic-div > form > div.login__form_action_container > button').click()
+            if self.driver.current_url == 'https://www.linkedin.com/feed/':
+                logger.info('driver initialized signed in as %s',mail)
+                print('\n\n\nsigned in successfully\n\n\n')
 
-        logger.info('driver initialized signed in as %s',mail)
+                break
+            logger.info('Current url is %s',self.driver.current_url)
+            logger.info('could not sign in please check credentials')
+            print('\n\n\ncould not sign in please check credentials\n\n\n')
+            time.sleep(5)
+
+        
         self.driver.implicitly_wait(20)
         # self.chrome_options.add_argument("--headless")
     def scrape(self,url) -> str:
@@ -54,6 +65,11 @@ class Scrapper:
         
         """Tries to scrape linkedin profile and returns about and headline throws if unsuccessful"""
         self.driver.get(url)
+        while self.driver.current_url != url:
+            time.sleep(5)
+            logger.info('redirected to signup page, retrying...')
+            logger.info('current url is %s',self.driver.current_url)
+
 
         logger.info('driver initialized url is %s',url)
         main = self.driver.find_element(by=By.TAG_NAME,value='main')
