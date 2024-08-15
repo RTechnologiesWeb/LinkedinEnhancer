@@ -46,7 +46,6 @@ def scrape(request):
             messages.error(request, 'Please enter a valid URL starting with https://')
             return redirect('index')
 
-        scrapper = Scrapper()
         try:
             data, screenshot = scrapper.scrape(url)
             request.session['data'] = data

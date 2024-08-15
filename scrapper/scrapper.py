@@ -25,96 +25,100 @@ class ScrapeException(Exception):
 
 class Scrapper:
     def __init__(self):
-        self.chrome_options = Options()
-        
-        # chrome_options.add_experimental_option("excludeSwitches", ["enable-logging"])
-        # self.chrome_options.add_argument('--log-level 3') 
+        self.chrome_options = Options() 
+        # self.chrome_options.add_argument("--start-maximized")
         self.chrome_options.add_argument("--no-sandbox")
         self.chrome_options.add_argument("--disable-dev-shm-usage")
         self.chrome_options.add_argument("--disable-gpu")
         self.chrome_options.add_argument("--headless")
+
+
+        self.driver = webdriver.Chrome(options=self.chrome_options)
+        # driver = webdriver.Chrome(options=self.chrome_options) 
+        self.driver.get("https://www.linkedin.com/login")
+
+        mail = os.environ['LINKEDIN_MAIL']
+        password = os.environ['LINKEDIN_PASS']
+        self.driver.find_element(by = By.CSS_SELECTOR,value='#username').send_keys(mail)
+        self.driver.find_element(by = By.CSS_SELECTOR,value='#password').send_keys(password)
+        self.driver.find_element(by=By.CSS_SELECTOR,value='#organic-div > form > div.login__form_action_container > button').click()
+
+        logger.info('driver initialized signed in as %s',mail)
+        # self.chrome_options.add_argument("--headless")
     def scrape(self,url) -> str:
-        cwd = os.getcwd()
+
         
         """Tries to scrape linkedin profile and returns about and headline throws if unsuccessful"""
-        driver = webdriver.Chrome(options=self.chrome_options)
-        # driver = webdriver.Chrome(options=self.chrome_options) 
+        self.driver.get(url)
 
         logger.info('driver initialized url is %s',url)
-        tries = 0
-        while driver.current_url != url:
-            if tries > 10:
-                raise ScrapeException("Could not Scrape page")
-            
-            logger.info("redirected to signup page")
-            logger.info(driver.current_url)
-            driver.get(url)
-            time.sleep(2)
-            tries += 1
-            
-        time.sleep(5)
+        main = self.driver.find_element(by=By.TAG_NAME,value='main')
+        print(main)
         try:
-            driver.find_element(by=By.CSS_SELECTOR,value='#base-contextual-sign-in-modal > div > section > button').click()
-            logger.info("clicked")
-        except:
-            logger.info("could not find button ")
-            try:
-                driver.find_element(by=By.CSS_SELECTOR,value='#public_profile_contextual-sign-in > div > section > button').click()
-                logger.info("clicked button 2")
+            about_section = main.find_element(by=By.CSS_SELECTOR,value='section:nth-child(3) > div:nth-child(3)')
+            text = about_section.text
+            about =text
+            logger.info('about found %s' ,about)
+            headline_section = main.find_element(by=By.XPATH,value='//*[@id="profile-content"]/div/div[2]/div/div/main/section[1]/div[2]/div[2]/div[1]/div[2]')
+            headline = headline_section.text
+            logger.info('headline found %s',headline)
 
-            except:
-                logger.info("could not find button")
+            projectDetailUl = self.driver.find_element(by=By.XPATH,value ='/html/body/div[5]/div[3]/div/div/div[2]/div/div/main/section[10]/div[3]/ul')
+            projectDetailsLi = projectDetailUl.find_elements(by=By.TAG_NAME,value='li')
 
-        time.sleep(2)
-        # with open('test.html', 'w', encoding='utf-8') as file:
-        #     file.write(driver.page_source)
-        about = driver.find_element(by=By.CSS_SELECTOR,value='section.core-section-container:nth-child(2) > div:nth-child(2) > p:nth-child(1)').text
-
-
-        headline = driver.find_element(by=By.CSS_SELECTOR,value ='.top-card-layout__headline').text
-
+            projDetails = ''
+            for project in projectDetailsLi:
+                projDetails += project.text.strip() + '\n'
+            logger.info('projects found %s',projDetails)
+            print(projDetails)
+            logger.info('projects found %s',projDetails)
 
 
-        projectDetailsLi = driver.find_elements(by=By.CSS_SELECTOR,value ='.personal-project')
-
-
-
-        projDetails = ''
-        for project in projectDetailsLi:
-            projDetails += project.text.strip() + '\n'
+            experienceUl = self.driver.find_element(by=By.XPATH,value ='/html/body/div[5]/div[3]/div/div/div[2]/div/div/main/section[7]/div[3]/ul')
+            experienceLi = experienceUl.find_elements(by=By.TAG_NAME,value ='li')
+            experience = ''
+            for exp in experienceLi:
+                experience += exp.text.strip() + '\n'
+            logger.info('experience found %s',experience)
+            print(experience)
 
 
 
-
-        experienceLi = driver.find_elements(by=By.CSS_SELECTOR,value ='.experience-item')
-        experience = ''
-        for exp in experienceLi:
-            experience += exp.text.strip() + '\n'
-
-
-
-        certificationLi = driver.find_elements(by=By.CSS_SELECTOR,value ='.experience-item')
-        certificationDetails = ''
-        for cert in certificationLi:
-            certificationDetails += cert.text.strip() + '\n'
-
-        
+            certificationUl= self.driver.find_element(by=By.XPATH,value ='/html/body/div[5]/div[3]/div/div/div[2]/div/div/main/section[9]/div[3]/ul')
+            certificationLi = certificationUl.find_elements(by=By.TAG_NAME,value ='li')
+            certificationDetails = ''
+            for cert in certificationLi:
+                certificationDetails += cert.text.strip() + '\n'
+            logger.info('certifications found %s',certificationDetails)
+            print(certificationDetails)
+            
 
 
-    
+            educationDetailsUl= self.driver.find_element(by=By.XPATH,value ='/html/body/div[5]/div[3]/div/div/div[2]/div/div/main/section[8]/div[3]/ul')
+            educationDetailsLis = educationDetailsUl.find_elements(by=By.TAG_NAME,value ='li')
+            eduDetails = ''
+            for edu in educationDetailsLis:
+                eduDetails += edu.text.strip() + '\n'
+            logger.info('education found %s',eduDetails)
+            print(eduDetails)
 
-
-        educationDetailsLis = driver.find_elements(by=By.CSS_SELECTOR,value ='.education__list-item')
-        eduDetails = ''
-        for edu in educationDetailsLis:
-            eduDetails += edu.text.strip() + '\n'
+        except Exception as e:
+            print(e)
+            logger.info("could not find see more button %s",e)
+            
+            pass
 
 
 
 
-        screenshot = driver.get_screenshot_as_png()
+
+
+
+
+
+        screenshot = self.driver.get_screenshot_as_png()
         screenshot = base64.b64encode(screenshot).decode('utf-8')
-        driver.quit()  
+        self.driver.quit()  
         return{
             'about':about,
             'headline':headline,
