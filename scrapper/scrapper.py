@@ -14,9 +14,11 @@ from selenium.webdriver.chrome.service import Service as ChromeService
 from webdriver_manager.chrome import ChromeDriverManager
 from django.conf import settings
 from selenium.webdriver.chrome.service import Service
+from dotenv import load_dotenv
 
 import logging
 logger = logging.getLogger(__name__)
+load_dotenv()
 
 class ScrapeException(Exception):
     """Custom exception for scrape errors"""
