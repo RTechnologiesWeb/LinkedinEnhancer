@@ -30,9 +30,9 @@ class Scrapper:
     def __init__(self):
         self.chrome_options = Options() 
         self.chrome_options.add_argument("--start-maximized")
-        # self.chrome_options.add_argument("--no-sandbox")
-        # self.chrome_options.add_argument("--disable-gpu")
-        # self.chrome_options.add_argument("--headless")
+        self.chrome_options.add_argument("--no-sandbox")
+        self.chrome_options.add_argument("--disable-gpu")
+        self.chrome_options.add_argument("--headless")
 
         while 1:
             self.driver = webdriver.Chrome(options=self.chrome_options)
