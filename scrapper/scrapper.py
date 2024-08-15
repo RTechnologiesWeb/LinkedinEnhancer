@@ -47,6 +47,7 @@ class Scrapper:
         self.driver.find_element(by=By.CSS_SELECTOR,value='#organic-div > form > div.login__form_action_container > button').click()
 
         logger.info('driver initialized signed in as %s',mail)
+        self.driver.implicitly_wait(20)
         # self.chrome_options.add_argument("--headless")
     def scrape(self,url) -> str:
 
