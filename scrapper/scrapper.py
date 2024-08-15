@@ -57,13 +57,13 @@ class Scrapper:
 
         logger.info('driver initialized url is %s',url)
         main = self.driver.find_element(by=By.TAG_NAME,value='main')
-        print(main)
+        logger.info('main element found ')
         try:
-            about_section = main.find_element(by=By.CSS_SELECTOR,value='section:nth-child(3) > div:nth-child(3)')
+            about_section = self.driver.find_element(by=By.XPATH,value='/html/body/div[5]/div[3]/div/div/div[2]/div/div/main/section[3]/div[3]/div/div/div/span[1]')
             text = about_section.text
             about =text
             logger.info('about found %s' ,about)
-            headline_section = main.find_element(by=By.XPATH,value='//*[@id="profile-content"]/div/div[2]/div/div/main/section[1]/div[2]/div[2]/div[1]/div[2]')
+            headline_section = self.driver.find_element(by=By.XPATH,value='//*[@id="profile-content"]/div/div[2]/div/div/main/section[1]/div[2]/div[2]/div[1]/div[2]')
             headline = headline_section.text
             logger.info('headline found %s',headline)
 
