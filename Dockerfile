@@ -34,13 +34,13 @@ RUN google-chrome --version
 
 RUN echo 'copying files'
 
-
 COPY . /app/
 
 # Collect static files
 RUN python manage.py collectstatic --noinput
+
 # Expose the port that the app runs on
 EXPOSE 8000
 
 # Start the Django application
-CMD ["gunicorn", "--bind", "0.0.0.0:8000", "linkedin.wsgi:application", "--timeout", "600"]
+CMD ["sh", "-c", "gunicorn --bind 0.0.0.0:${PORT:-8000} linkedin.wsgi:application --timeout 600"]
