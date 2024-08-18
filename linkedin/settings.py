@@ -108,7 +108,9 @@ DATABASES = {
 
 # psql "postgres://default:JjxEo4aMiUq2@ep-rough-poetry-a447x3gf.us-east-1.aws.neon.tech:5432/verceldb?sslmode=require"
 
-DATABASES['default'] = dj_database_url.config(default = os.environ.get('DB_CONN') ,conn_max_age=600, ssl_require=True)
+# DATABASES['default'] = dj_database_url.config(default = os.environ.get('DB_CONN') ,conn_max_age=600, ssl_require=True)
+
+
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
 
