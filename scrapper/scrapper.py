@@ -32,6 +32,7 @@ class Scrapper:
         self.chrome_options.add_argument("--start-maximized")
         self.chrome_options.add_argument("--no-sandbox")
         self.chrome_options.add_argument("--disable-gpu")
+        self.chrome_options.add_argument("--disable-dev-shm-usage")
         self.chrome_options.add_argument("--headless")
 
         while 1:
