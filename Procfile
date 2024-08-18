@@ -1,1 +1,1 @@
-web: gunicorn linkedin.wsgi:application
+web: gunicorn linkedin.wsgi:application --bind 0.0.0.0:$PORT
