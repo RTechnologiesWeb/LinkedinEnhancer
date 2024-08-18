@@ -1,7 +1,6 @@
 from django.shortcuts import render
 from django.shortcuts import redirect
 import requests
-from scrapper.scrapper import ScrapeException, Scrapper
 from scrapper.llm_bot import LLM_Bot
 from django.contrib import messages
 import json
@@ -9,7 +8,6 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-scrapper = Scrapper()
 llm_bot = LLM_Bot()
 
 def index(request):
