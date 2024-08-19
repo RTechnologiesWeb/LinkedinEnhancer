@@ -21,9 +21,18 @@
       <div class="mb-5 overflow-scroll w-75">
         <img class="img-fluid" src="{{ screenshot }}" alt="Screenshot">
       </div>
-      <button type="submit" class="btn btn-primary fs-3">Update Your Profile</button>
+      <button type="submit" class="btn btn-primary fs-3" id="submit-button">Update Your Profile</button>
     </form>
   </div>
 </div>
+<script>
+  document.getElementById('submit-button').addEventListener('click', function(event) {
+      this.disabled = true;
+      this.form.submit();
+      event.preventDefault(); // Prevent default form submission if necessary
+  });
+</script>
+
+
 
 {% endblock body %}

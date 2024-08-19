@@ -51,8 +51,10 @@ def scrape(request):
     return redirect('index')
 
 def getQuestions(request):
+    logger.info("getQuestions view called")
     if request.method == 'POST':
         if 'data' not in request.session:
+            messages.error(request, "Session expired. Please try again.")
             return redirect('index')
 
         data = request.session['data']
@@ -60,8 +62,17 @@ def getQuestions(request):
         headline = data['headline']
 
         questions = llm_bot.getQuestions(about, headline)
+        print("Questions agaye")
+        print("Questions ye hain",questions)
+
+        if questions is None:
+            logger.error("Failed to retrieve questions from LLM_Bot.")
+            messages.error(request, "Failed to retrieve questions. Please try again later.")
+            return redirect('index')
+
         numOfQuestions = len(questions)
-        
+        logger.info(f"Retrieved {numOfQuestions} questions successfully.")
+
         return render(request, 'questions.html', {
             'questions': questions,
             'numOfQuestions': numOfQuestions,
@@ -70,6 +81,7 @@ def getQuestions(request):
         })
     
     return redirect('index')
+
 
 def getRecommendation(request):
     if request.method == 'POST':

@@ -72,40 +72,43 @@ class LLM_Bot:
         self.chain_general_obs = LLMChain(llm =self.llm, prompt=self.general_obs_prompt)
         self.second_chain = LLMChain(llm =self.llm, prompt=self.second_prompt)
 
-    # def getQuestions(self,about:str,headline:str) -> Any:
-    #     while 1:
-    #         res = self.chain_first.invoke({'about': about,'headline': headline})
-    #         print(res['text'])
-    #         try:     
-    #             question_raw = (res['text'].split('```') [1] )
 
-    #             questions_split = question_raw.split('\n')
-
-    #             questions_split = [q for q in questions_split if len(q.split(' ')) > 3 ]
-    #             if len(questions_split) <1:
-    #                 continue
-    #             return questions_split    
-    #         except:
-    #             continue
 
     def getQuestions(self, about: str, headline: str) -> Any:
-        while True:
+        retry_count = 0
+        max_retries = 1
+
+        while retry_count < max_retries:
             try:
                 res = self.chain_first.invoke({'about': about, 'headline': headline})
-                print(res['text'])
-                question_raw = (res['text'].split('```')[1])
-                questions_split = question_raw.split('\n')
-                questions_split = [q for q in questions_split if len(q.split(' ')) > 3]
-                if len(questions_split) < 1:
-                    continue
-                return questions_split
-            except RateLimitError as e:
-                print("Rate limit exceeded. Please try again later.")
-                # Implement logic to handle the rate limit, e.g., retry after some time
+                print("Full response:", res)
+
+                # Directly target the 'text' key and remove the first line with "```Questions```"
+                full_text = res['text']
+                print("Full text received:", full_text)
+
+                # Split the text into lines and remove the first one
+                lines = full_text.split('\n')[1:]
+                print("Lines after splitting:", lines)
+
+                # Filter out empty lines and ensure there's meaningful content
+                questions_split = [line.strip() for line in lines if len(line.strip()) > 0]
+                print("Filtered questions:", questions_split)
+
+                if len(questions_split) > 0:
+                    return questions_split
+                break  # If questions are found, exit loop
+            except RateLimitError:
+                print("Rate limit exceeded. Retrying after 60 seconds.")
                 time.sleep(60)  # Sleep for 60 seconds before retrying
             except Exception as e:
                 print(f"An error occurred: {e}")
-                continue
+                break  # Break out of the loop if there's an unexpected error
+            
+            retry_count += 1
+
+        return None
+
 
     # def get_gen_obs(self,data:str) -> str:
 
