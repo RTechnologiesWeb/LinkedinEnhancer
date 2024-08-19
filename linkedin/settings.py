@@ -33,7 +33,8 @@ DEBUG = os.getenv('DJANGO_DEBUG', 'False') == 'True'
 ALLOWED_HOSTS = ["*"]
 CSRF_TRUSTED_ORIGINS = [
     'https://linkedinenhancer-production.up.railway.app',
-    'https://web-production-bb84.up.railway.app'
+    'https://web-production-bb84.up.railway.app',
+    'https://linkedinenhancer.up.railway.app '
 ]
 
 
