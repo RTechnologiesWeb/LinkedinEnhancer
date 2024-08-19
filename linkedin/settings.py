@@ -81,30 +81,15 @@ TEMPLATES = [
 WSGI_APPLICATION = 'linkedin.wsgi.application'
 
 
-# Database
-# https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.getenv('DB_NAME', 'your_default_dbname'),
-        'USER': os.getenv('DB_USER', 'your_default_dbuser'),
-        'PASSWORD': os.getenv('DB_PASSWORD', 'your_default_dbpassword'),
-        'HOST': os.getenv('DB_HOST', 'localhost'),
-        'PORT': os.getenv('DB_PORT', '3306'),
-    }
+    'default': dj_database_url.config(
+        default=os.getenv('DATABASE_PUBLIC_URL', ''),
+        conn_max_age=600,
+    )
 }
 
-
 # psql "postgres://default:JjxEo4aMiUq2@ep-rough-poetry-a447x3gf.us-east-1.aws.neon.tech:5432/verceldb?sslmode=require"
-
-# DATABASES['default'] = dj_database_url.config(default = os.environ.get('DB_CONN') ,conn_max_age=600, ssl_require=True)
 
 
 # Password validation

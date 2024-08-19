@@ -6,7 +6,9 @@ from django.contrib import messages
 import json
 import logging
 logger = logging.getLogger(__name__)
-
+import os
+from dotenv import load_dotenv
+load_dotenv()
 
 llm_bot = LLM_Bot()
 
@@ -14,10 +16,13 @@ def index(request):
     
     return render(request, 'index.html')
 
-SCRAPER_API_URL = 'https://9e57-124-29-227-46.ngrok-free.app/scrape'
+SCRAPER_API_URL = os.getenv('SCRAPER_API_URL')
+print("SCRAPER_API_URL", SCRAPER_API_URL)
 headers = {
     'ngrok-skip-browser-warning': 'true'
 }
+
+
 def scrape(request):
     if request.method == 'POST':
         url = request.POST.get('url')
@@ -26,8 +31,8 @@ def scrape(request):
             return redirect('index')
 
         try:
-            # Make a request to the Flask API
-            response = requests.post(SCRAPER_API_URL, headers=headers, json={'url': url})
+            # Make a POST request to the Flask API
+            response = requests.post(f"{SCRAPER_API_URL}/scrape", headers=headers, json={'url': url})
             response_data = response.json()
 
             if response_data['status'] == 'success':
