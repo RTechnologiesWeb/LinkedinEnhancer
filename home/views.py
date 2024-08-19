@@ -82,6 +82,9 @@ def getQuestions(request):
     
     return redirect('index')
 
+def preprocess_text(text):
+    # Replace **text** with <strong>text</strong>
+    return text.replace("**", "<strong>").replace("**", "</strong>", 1)
 
 def getRecommendation(request):
     if request.method == 'POST':
@@ -102,6 +105,8 @@ def getRecommendation(request):
         suggestions = llm_bot.getNewAbout(about, headline, qa)
         extra_suggestions = llm_bot.get_gen_obs(json.dumps(data))
 
+        suggestions = preprocess_text(suggestions)
+        extra_suggestions = preprocess_text(extra_suggestions)
         return render(request, 'recommendation.html', {
             'suggestions': suggestions,
             'extra_suggestions': extra_suggestions
