@@ -21,14 +21,14 @@
       {% csrf_token %}
 
       <div class="mb-3" style="width: 75vw;">
-        <h2 for="about" class="form-label">Suggestions:</h2>
+        <h2 for="about" class="form-label">Suggested Improvements:</h2>
         <div class="form-control" name="about" id="about" disabled style="height: auto; white-space: pre-wrap; border: 1px solid #ced4da; background-color: #e9ecef;">
           {{ suggestions|safe }}
         </div>
       </div>
 
       <div class="mb-3" style="width: 75vw;">
-        <h2 for="about" class="form-label">Suggestions:</h2>
+        <h2 for="about" class="form-label">Other Suggestions:</h2>
         <div class="form-control" name="about" id="about" disabled style="height: auto; white-space: pre-wrap; border: 1px solid #ced4da; background-color: #e9ecef;">
           {{ extra_suggestions|safe }}
         </div>
