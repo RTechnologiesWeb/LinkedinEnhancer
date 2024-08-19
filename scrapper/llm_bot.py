@@ -20,9 +20,8 @@ import os
 from dotenv import load_dotenv
 load_dotenv()
 
-# API_KEY = os.environ.get('OPENAI_API_KEY')
-API_KEY = os.getenv('OPENAI_API_KEY')
-
+OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
+print("API_KEY: ", OPENAI_API_KEY)
 class LLM_Bot:
     def __init__(self) -> None:
 
@@ -68,7 +67,7 @@ class LLM_Bot:
 
             ]
         )
-        self.llm = ChatOpenAI(api_key=API_KEY)
+        self.llm = ChatOpenAI(api_key=OPENAI_API_KEY)
         self.chain_first = LLMChain(llm=self.llm , prompt=self.first_prompt)
         self.chain_general_obs = LLMChain(llm =self.llm, prompt=self.general_obs_prompt)
         self.second_chain = LLMChain(llm =self.llm, prompt=self.second_prompt)
