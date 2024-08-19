@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.shortcuts import redirect
+import markdown
 import requests
 from scrapper.llm_bot import LLM_Bot
 from django.contrib import messages
@@ -84,7 +85,7 @@ def getQuestions(request):
 
 def preprocess_text(text):
     # Replace **text** with <strong>text</strong>
-    return text.replace("**", "<strong>").replace("**", "</strong>", 1)
+    return markdown.markdown(text)
 
 def getRecommendation(request):
     if request.method == 'POST':

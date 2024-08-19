@@ -15,29 +15,28 @@
   }
 </style>
 
-<div class="container min-vh-100 d-flex ">
-  
-            <div class="col-12 d-flex justify-content-center align-items-center ">
- 
-              <form action="" method="post">
-                {% csrf_token %}
-                <div class="mb-3" style="width: 75vw;">
-                  <h2 for="about" class="form-label">Suggestions:</h2>
-                  <div>
+<div class="container min-vh-100 d-flex">
+  <div class="col-12 d-flex justify-content-center align-items-center">
+    <form action="" method="post">
+      {% csrf_token %}
 
-                    <textarea class="form-control" name="about" id="about" disabled rows="20">{{ suggestions|safe }}</textarea>
-                  </div>
-                </div>
-                <div class="mb-3" style="width: 75vw;">
-                  <h2 for="about" class="form-label">Suggestions:</h2>
-                  <div>
+      <div class="mb-3" style="width: 75vw;">
+        <h2 for="about" class="form-label">Suggestions:</h2>
+        <div class="form-control" name="about" id="about" disabled style="height: auto; white-space: pre-wrap; border: 1px solid #ced4da; background-color: #e9ecef;">
+          {{ suggestions|safe }}
+        </div>
+      </div>
 
-                    <textarea class="form-control" name="about" id="about" disabled rows="20">{{ extra_suggestions|safe }}</textarea>
-                  </div>
-                </div>
+      <div class="mb-3" style="width: 75vw;">
+        <h2 for="about" class="form-label">Suggestions:</h2>
+        <div class="form-control" name="about" id="about" disabled style="height: auto; white-space: pre-wrap; border: 1px solid #ced4da; background-color: #e9ecef;">
+          {{ extra_suggestions|safe }}
+        </div>
+      </div>
 
-                  </form>
-            </div>
+    </form>
+  </div>
 </div>
+
 
 {% endblock body %}
