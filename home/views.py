@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.shortcuts import redirect
 import markdown
 import requests
-from scrapper.llm_bot import LLM_Bot
+from gpt_llm.llm_bot import LLM_Bot
 from django.contrib import messages
 import json
 import logging
