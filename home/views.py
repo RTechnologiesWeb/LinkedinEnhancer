@@ -62,21 +62,26 @@ def getQuestions(request):
         about = data['about']
         headline = data['headline']
 
-        questions = llm_bot.getQuestions(about, headline)
+        questions_about = llm_bot.getAboutQuestions(about)
+        questions_headline = llm_bot.getHeadlineQuestions(headline=headline,about=about)
+        
         print("Questions agaye")
-        print("Questions ye hain",questions)
+        print("Questions ye hain",questions_about,questions_headline)
 
-        if questions is None:
+        if questions_about is None or  questions_headline is None:
             logger.error("Failed to retrieve questions from LLM_Bot.")
             messages.error(request, "Failed to retrieve questions. Please try again later.")
             return redirect('index')
 
-        numOfQuestions = len(questions)
-        logger.info(f"Retrieved {numOfQuestions} questions successfully.")
+        numOfAboutQuestions = len(questions_about)
+        numOfHeadlineQuestions = len(questions_headline)
+        logger.info(f"Retrieved {numOfAboutQuestions} about questions successfully and {numOfHeadlineQuestions} headline questions successfully.")
 
         return render(request, 'questions.html', {
-            'questions': questions,
-            'numOfQuestions': numOfQuestions,
+            'questionsAbout': questions_about,
+            'questionsHeadline': questions_headline,
+            'numOfAboutQuestions': numOfAboutQuestions,
+            'numOfHeadlineQuestions': numOfHeadlineQuestions,
             'about': about,
             'headline': headline
         })
@@ -95,25 +100,51 @@ def getRecommendation(request):
         data = request.session['data']
         about = data['about']
         headline = data['headline']
-        numOfQuestions = request.POST.get('numOfQuestions')
-        qa = ''
-        for i in range(1, int(numOfQuestions) + 1):
-            question = request.POST.get(f'question_{i}')
-            answer = request.POST.get(f'answer_{i}')
-            qa += f"Question {i}: {question}\n"
-            qa += f"Answer {i}: {answer}\n"
+        experience  = data['experience']
+        projects = data['projects']
+        numOfAboutQuestions = request.POST.get('numOfAboutQuestions')
+        numOfHeadlineQuestions = request.POST.get('numOfHeadlineQuestions')
+        about_qa = ''
+        for i in range(1, int(numOfAboutQuestions) + 1):
+            question = request.POST.get(f'question_about_{i}')
+            answer = request.POST.get(f'answer_about_{i}')
+            about_qa += f"Question {i}: {question}\n"
+            about_qa += f"Answer {i}: {answer}\n"
 
-        suggestions = llm_bot.getNewAbout(about, headline, qa)
-        extra_suggestions = llm_bot.get_gen_obs(json.dumps(data))
+        newAbout = llm_bot.getNewAbout(about,  about_qa)
+        headline_qa = ''
+        for i in range(1, int(numOfHeadlineQuestions) + 1):
+            question = request.POST.get(f'question_headline_{i}')
+            answer = request.POST.get(f'answer_headline_{i}')
+            headline_qa += f"Question {i}: {question}\n"
+            headline_qa += f"Answer {i}: {answer}\n"
 
-        suggestions = preprocess_text(suggestions)
-        extra_suggestions = preprocess_text(extra_suggestions)
+        newHeadline = llm_bot.getNewHeadline(headline, headline_qa)
+
+
+        newExperience = llm_bot.getNewExperience(experience)
+        newProjects = llm_bot.getNewProjects(projects)
+
+
+
+
+
         return render(request, 'recommendation.html', {
-            'suggestions': suggestions,
-            'extra_suggestions': extra_suggestions
+            'newAbout': newAbout,
+            'about': about,
+            'newHeadline': newHeadline,
+            'headline': headline,
+            "newExperience":newExperience,
+            'experience':experience,
+            "newProjects":newProjects,
+            'projects':projects
+
         })
     
     return redirect('index')
+
+
+
 
 def manualUpload(request):
     return render(request,'manualUpload.html')

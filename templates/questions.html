@@ -21,22 +21,38 @@
                 </h3>
 
                 <input type="hidden" name="about" value="{{about}}"  id="">
-                <input type="hidden" name="numOfQuestions" value="{{numOfQuestions}}"  id="">
+                <input type="hidden" name="numOfAboutQuestions" value="{{numOfAboutQuestions}}"  id="">
+                <input type="hidden" name="numOfHeadlineQuestions" value="{{numOfHeadlineQuestions}}"  id="">
                 <input type="hidden" name="headline" value="{{headline}}"  id="">
                 {% csrf_token %}
-                {% for question in questions  %}
+                {% for question in questions_headline  %}
 
                 <div class="mb-3">
     
     
                   <div>
-                    <input type="hidden" name="question_{{forloop.counter}}" value="{{question}}">
+                    <input type="hidden" name="question_headline_{{forloop.counter}}" value="{{question}}">
                     
                     <p class="question"> 
                       {{question}}
                     </p>  
                   </div>
-                  <textarea class="form-control" name="answer_{{forloop.counter}}" rows="3" id="answer_{{forloop.counter}}"></textarea>
+                  <textarea class="form-control" name="answer_headline_{{forloop.counter}}" rows="3" id="answer_{{forloop.counter}}"></textarea>
+                </div>
+                {% endfor %}
+                {% for question in questions_about  %}
+
+                <div class="mb-3">
+    
+    
+                  <div>
+                    <input type="hidden" name="question_about_{{forloop.counter}}" value="{{question}}">
+                    
+                    <p class="question"> 
+                      {{question}}
+                    </p>  
+                  </div>
+                  <textarea class="form-control" name="answer_about_{{forloop.counter}}" rows="3" id="answer_{{forloop.counter}}"></textarea>
                 </div>
                 {% endfor %}
                     <button type="submit" class="btn btn-primary">Update</button>

@@ -20,67 +20,180 @@ import os
 from dotenv import load_dotenv
 load_dotenv()
 
+# we can re structure this to ask questions relevant to the section we are about to update only 
+# This would results in more relevant questions and less token usage
+
 OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
 print("API_KEY: ", OPENAI_API_KEY)
 class LLM_Bot:
     def __init__(self) -> None:
+        self.headlineQPrompt = ChatPromptTemplate.from_messages([
+
+            SystemMessage(
+                content=(
+                " You are an AI expert in LinkedIn profile optimization, "
+                "specializing in crafting impactful headlines. "
+                "Your task is to analyze a user's current LinkedIn headline and professional information, "
+                "then ask 5 questions to help them improve it. "
+                "Place all the questions together enclosed in triple backticks ```Questions``` Like this. "
+                )
+                ),
+            HumanMessagePromptTemplate.from_template("Headline: {headline} \n About: {about}"),
+        ]
+        )
+        self.newHeadlinePrompt = ChatPromptTemplate.from_messages([
+
+            SystemMessage(
+                
+                content=
+                (" You are an AI expert in LinkedIn profile optimization, "
+                "specializing in crafting impactful headlines. "
+                "Your task is to analyze a user's current LinkedIn headline and review the answers the user gave "
+                "to create an optimized version of the headline. Return only the optimized headline. "
+                "Ensure that the headline is clear, concise, has a professional tone, uses relevant keywords, offers Unique value proposition. "
+                "The headline should have the following features:\n"
+                "1. Should be 220 characters or less. \n"
+                "2. Incorporates relevant industry keywords.\n"
+                "3. Highlights the user's unique skills or expertise.\n"
+                "4. Aligns with their career goals.\n"
+                "5. Clearly states the user's professional identity.\n"
+                "6. Incorporates relevant industry keywords.\n"
+                "7. Uses action-oriented language where appropriate.\n"
+                "8. Avoids clichés and overly general terms.\n"
+
+            )
+            ),
+            HumanMessagePromptTemplate.from_template("Headline: {headline} \n Questions and answers: {qa}"),
+        ]
+
+        )
+
+        self.aboutQPrompt = ChatPromptTemplate.from_messages([
+
+            SystemMessage(
+                content=(" You are an AI expert in LinkedIn profile optimization, "
+                "specializing in crafting compelling 'About' sections. "
+                "Your task is to analyze a user's current LinkedIn 'About', "
+                "then ask 5 questions to help them improve it. "
+                "Place all the questions together enclosed in triple backticks ```Questions``` Like this. "
+                
+            )),
+            HumanMessagePromptTemplate.from_template("About: {about}")
+        ]
+
+        )
+        self.newAboutPrompt = ChatPromptTemplate.from_messages(
+         [
+             
+         SystemMessage(
+                content=(" You are an AI expert in LinkedIn profile optimization, "
+                "specializing in crafting compelling 'About' sections. "
+                "Your task is to analyze a user's current LinkedIn 'About', and review the answers the user gave "
+                "to create an optimized version of the 'About' Sections. Return only the optimized 'About' Sections. "
+                "The optimized 'About' Section should have the following features:\n"
+                "1. Is between 2000-2600 characters (LinkedIn's limit) \n"
+                "2. Starts with a strong, attention-grabbing opening statement\n"
+                "3. Clearly communicates the user's professional identity and value proposition.\n"
+                "4. Incorporates relevant industry keywords naturally.\n"
+                "5. Highlights key achievements and skills with specific examples.\n"
+                "6. Includes a brief career narrative that showcases progression and expertise.\n"
+                "7. Ends with a clear call-to-action or statement of career aspirations.\n"
+                "8. Uses a mix of short paragraphs and bullet points for readability.\n"
+                "9. Maintains a professional yet personable tone.\n"
+
+            )),
+            HumanMessagePromptTemplate.from_template("About: {about} \n Questions and answers: {qa}"),
+
+         ]   
+        )
+
+        self.newExperience = ChatPromptTemplate.from_messages(
+         [
+             
+            SystemMessage(
+                content=(" You are an AI expert in LinkedIn profile optimization, "
+                "specializing in crafting compelling 'About' sections. "
+                "Your task is to analyze a user's current LinkedIn 'About', and review the answers the user gave "
+                "to create an optimized version of the 'About' Sections. Return only the optimized 'About' Sections. "
+                "The optimized 'About' Section should have the following features:\n"
+                "1. Is between 2000-2600 characters (LinkedIn's limit) \n"
+                "2. Starts with a strong, attention-grabbing opening statement\n"
+                "3. Clearly communicates the user's professional identity and value proposition.\n"
+                "4. Incorporates relevant industry keywords naturally.\n"
+                "5. Highlights key achievements and skills with specific examples.\n"
+                "6. Includes a brief career narrative that showcases progression and expertise.\n"
+                "7. Ends with a clear call-to-action or statement of career aspirations.\n"
+                "8. Uses a mix of short paragraphs and bullet points for readability.\n"
+                "9. Maintains a professional yet personable tone.\n"
+
+            )),
+            HumanMessagePromptTemplate.from_template("About: {about} \n Questions and answers: {qa}"),
+         ]
+
+        )
+        self.newExperience = ChatPromptTemplate.from_messages(
+            [
+
+            SystemMessage(
+                content=(" You are an AI expert in LinkedIn profile optimization, "
+                "specializing in crafting compelling 'About' sections. "
+                "Your task is to analyze a user's current LinkedIn 'About', and review the answers the user gave "
+                "to create an optimized version of the 'About' Sections. Return only the optimized 'About' Sections. "
+                "The optimized 'About' Section should have the following features:\n"
+                "1. Is between 2000-2600 characters (LinkedIn's limit) \n"
+                "2. Starts with a strong, attention-grabbing opening statement\n"
+                "3. Clearly communicates the user's professional identity and value proposition.\n"
+                "4. Incorporates relevant industry keywords naturally.\n"
+                "5. Highlights key achievements and skills with specific examples.\n"
+                "6. Includes a brief career narrative that showcases progression and expertise.\n"
+                "7. Ends with a clear call-to-action or statement of career aspirations.\n"
+                "8. Uses a mix of short paragraphs and bullet points for readability.\n"
+                "9. Maintains a professional yet personable tone.\n"
+
+            )),
+            HumanMessagePromptTemplate.from_template("experience: {experience} \n "),
+            ]
+
+        )
+
+        self.newProjects = ChatPromptTemplate.from_messages(
+            [
+
+            SystemMessage(
+                content=(" You are an AI expert in LinkedIn profile optimization, "
+                "specializing in crafting compelling 'About' sections. "
+                "Your task is to analyze a user's current LinkedIn 'About', and review the answers the user gave "
+                "to create an optimized version of the 'About' Sections. Return only the optimized 'About' Sections. "
+                "The optimized 'About' Section should have the following features:\n"
+                "1. Is between 2000-2600 characters (LinkedIn's limit) \n"
+                "2. Starts with a strong, attention-grabbing opening statement\n"
+                "3. Clearly communicates the user's professional identity and value proposition.\n"
+                "4. Incorporates relevant industry keywords naturally.\n"
+                "5. Highlights key achievements and skills with specific examples.\n"
+                "6. Includes a brief career narrative that showcases progression and expertise.\n"
+                "7. Ends with a clear call-to-action or statement of career aspirations.\n"
+                "8. Uses a mix of short paragraphs and bullet points for readability.\n"
+                "9. Maintains a professional yet personable tone.\n"
+
+            )),
+            HumanMessagePromptTemplate.from_template("projects: {projects} "),
+            ]
+
+        )
 
     
 
 
-        self.first_prompt = ChatPromptTemplate.from_messages(
-            [
-                SystemMessage(
-                    content=(
-                        "You are Linkedin profile optimizer. "
-                         "The user will provide about and headline of their profile. "
-                          "your job is to generate target questions to improve it. "
-                          "Place all the questions together enclosed in triple backticks ```Questions``` Like this. "
-                    )
-                ),
-                HumanMessagePromptTemplate.from_template("Headline: {headline} \n About: {about}"),
-            ]
-        )
-        
-        self.general_obs_prompt = ChatPromptTemplate.from_messages(
-                        [
-                SystemMessage(
-                    content=(
-                          "You are Linkedin profile optimizer. "
-                         "Using the following linkedin profile guide the use how to optimize it. "
-                    )
-                ),
-                HumanMessagePromptTemplate.from_template("Profile: {profile} "),
-            ]
-        )
-        self.second_prompt = ChatPromptTemplate.from_messages(
-            [
-                SystemMessage(
-                    content=(
-                        "You are Linkedin profile optimizer. "
-                         "You asked the user a bunch of questions to optimize their headline and about section. "
-                         "The user is going to provide answers to those questions along with the about and headline. "
-                        "Your job is to generate a new about and headline section based on the answers provided. "
-                    )
-                ),
-                HumanMessagePromptTemplate.from_template("Headline: {headline} \n About: {about} \n Questions and answers: {qa}"),
-
-            ]
-        )
         self.llm = ChatOpenAI(api_key=OPENAI_API_KEY)
-        self.chain_first = LLMChain(llm=self.llm , prompt=self.first_prompt)
-        self.chain_general_obs = LLMChain(llm =self.llm, prompt=self.general_obs_prompt)
-        self.second_chain = LLMChain(llm =self.llm, prompt=self.second_prompt)
 
 
-
-    def getQuestions(self, about: str, headline: str) -> Any:
+    def getAboutQuestions(self, about: str) -> list[str] | None:
         retry_count = 0
         max_retries = 1
-
+        chain = LLMChain(self.llm, self.aboutQPrompt)
         while retry_count < max_retries:
             try:
-                res = self.chain_first.invoke({'about': about, 'headline': headline})
+                res = chain.invoke({'about': about})
                 print("Full response:", res)
 
                 # Directly target the 'text' key and remove the first line with "```Questions```"
@@ -92,7 +205,43 @@ class LLM_Bot:
                 print("Lines after splitting:", lines)
 
                 # Filter out empty lines and ensure there's meaningful content
-                questions_split = [line.strip() for line in lines if len(line.strip()) > 0]
+                questions_split = [line.strip() for line in lines if len(line.strip()) > 2]
+                print("Filtered questions:", questions_split)
+
+                if len(questions_split) > 0:
+                    return questions_split
+                break  # If questions are found, exit loop
+            except RateLimitError:
+                print("Rate limit exceeded. Retrying after 60 seconds.")
+                time.sleep(60)  # Sleep for 60 seconds before retrying
+            except Exception as e:
+                print(f"An error occurred: {e}")
+                break  # Break out of the loop if there's an unexpected error
+            
+            retry_count += 1
+
+        return None
+    
+
+    def getHeadlineQuestions(self, headline: str,about:str) -> list[str] | None:
+        retry_count = 0
+        max_retries = 1
+        chain = LLMChain(self.llm, self.headlineQPrompt)
+        while retry_count < max_retries:
+            try:
+                res = chain.invoke({'headline': headline,'about': about})
+                print("Full response:", res)
+
+                # Directly target the 'text' key and remove the first line with "```Questions```"
+                full_text = res['text']
+                print("Full text received:", full_text)
+
+                # Split the text into lines and remove the first one
+                lines = full_text.split('\n')[1:]
+                print("Lines after splitting:", lines)
+
+                # Filter out empty lines and ensure there's meaningful content
+                questions_split = [line.strip() for line in lines if len(line.strip()) > 2]
                 print("Filtered questions:", questions_split)
 
                 if len(questions_split) > 0:
@@ -109,28 +258,11 @@ class LLM_Bot:
 
         return None
 
-
-    # def get_gen_obs(self,data:str) -> str:
-
-    #     res = self.chain_general_obs.invoke({'profile': data})
-    #     return res['text']
-
-    def get_gen_obs(self, data: str) -> str:
-        try:
-            res = self.chain_general_obs.invoke({'profile': data})
-            return res['text']
-        except RateLimitError as e:
-            print("Rate limit exceeded. Please try again later.")
-            # Implement logic to handle the rate limit
-            time.sleep(60)  # Sleep for 60 seconds before retrying
-        except Exception as e:
-            print(f"An error occurred: {e}")
-            return ""
-        
     
-    def getNewAbout(self, about: str, headline: str, qa: str) -> str:
+    def getNewAbout(self, about: str, qa: str) -> str:
+        chain = LLMChain(self.llm, self.newAboutPrompt)
         try:
-            res = self.second_chain.invoke({'about': about, 'headline': headline, 'qa': qa})
+            res = chain.invoke({'about': about, 'qa': qa})
             return res['text']
         except RateLimitError as e:
             print("Rate limit exceeded. Please try again later.")
@@ -139,3 +271,39 @@ class LLM_Bot:
         except Exception as e:
             print(f"An error occurred: {e}")
             return ""
+
+    def getNewHeadline(self, headline: str, qa: str) -> str:
+        chain = LLMChain(self.llm, self.newHeadlinePrompt)
+        try:
+            res = chain.invoke({'about': headline, 'qa': qa})
+            return res['text']
+        except RateLimitError as e:
+            print("Rate limit exceeded. Please try again later.")
+            # Implement logic to handle the rate limit
+            time.sleep(60)  # Sleep for 60 seconds before retrying
+        except Exception as e:
+            print(f"An error occurred: {e}")
+            return ""
+
+
+    def getNewExperience(self, experience: str) -> str:
+        chain = LLMChain(self.llm, self.newExperience)
+        try:
+            res = chain.invoke({'experince': experience})
+            return res['text']
+        except RateLimitError as e:
+            print("Rate limit exceeded. Please try again later.")
+            # Implement logic to handle the rate limit
+            time.sleep(60)
+
+    def getNewProjects(self, projects: str) -> str:
+        chain = LLMChain(self.llm, self.newProjects)
+        try:
+            res = chain.invoke({'projects': projects})
+            return res['text']
+        except RateLimitError as e:
+            print("Rate limit exceeded. Please try again later.")
+            # Implement logic to handle the rate limit
+            time.sleep(60)
+
+
