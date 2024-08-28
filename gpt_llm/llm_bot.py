@@ -60,6 +60,7 @@ class LLM_Bot:
                 "6. Incorporates relevant industry keywords.\n"
                 "7. Uses action-oriented language where appropriate.\n"
                 "8. Avoids clichés and overly general terms.\n"
+                "Return only the optimized headline."
 
             )
             ),
@@ -89,7 +90,7 @@ class LLM_Bot:
                 content=(" You are an AI expert in LinkedIn profile optimization, "
                 "specializing in crafting compelling 'About' sections. "
                 "Your task is to analyze a user's current LinkedIn 'About', and review the answers the user gave "
-                "to create an optimized version of the 'About' Sections. Return only the optimized 'About' Sections. "
+                "to create an optimized version of the 'About' Sections.  "
                 "The optimized 'About' Section should have the following features:\n"
                 "1. Is between 2000-2600 characters (LinkedIn's limit) \n"
                 "2. Starts with a strong, attention-grabbing opening statement\n"
@@ -100,7 +101,7 @@ class LLM_Bot:
                 "7. Ends with a clear call-to-action or statement of career aspirations.\n"
                 "8. Uses a mix of short paragraphs and bullet points for readability.\n"
                 "9. Maintains a professional yet personable tone.\n"
-
+                "Return only the optimized 'About' Sections."
             )),
             HumanMessagePromptTemplate.from_template("About: {about} \n Questions and answers: {qa}"),
 
@@ -112,71 +113,71 @@ class LLM_Bot:
              
             SystemMessage(
                 content=(" You are an AI expert in LinkedIn profile optimization, "
-                "specializing in crafting compelling 'About' sections. "
-                "Your task is to analyze a user's current LinkedIn 'About', and review the answers the user gave "
-                "to create an optimized version of the 'About' Sections. Return only the optimized 'About' Sections. "
-                "The optimized 'About' Section should have the following features:\n"
-                "1. Is between 2000-2600 characters (LinkedIn's limit) \n"
-                "2. Starts with a strong, attention-grabbing opening statement\n"
-                "3. Clearly communicates the user's professional identity and value proposition.\n"
-                "4. Incorporates relevant industry keywords naturally.\n"
-                "5. Highlights key achievements and skills with specific examples.\n"
-                "6. Includes a brief career narrative that showcases progression and expertise.\n"
-                "7. Ends with a clear call-to-action or statement of career aspirations.\n"
-                "8. Uses a mix of short paragraphs and bullet points for readability.\n"
-                "9. Maintains a professional yet personable tone.\n"
+                "specializing in crafting compelling 'Experience' sections. "
+                "Your task is to analyze a user's current LinkedIn 'Experience' section and "
+                "to create an optimized version of the 'Experience' Sections."
+                "Optimize by Refining each job title for clarity and searchability (if needed), "
+                "Ensuring accurate company names and date ranges"
+                "Crafting concise, impactful bullet points (3-5 per role) that:\n"
+                "Start with strong action verbs\n"
+                "Incorporate relevant industry keywords\n"
+                "Highlight specific, quantifiable achievements (e.g., percentages, numbers, dollar amounts)\n"
+                "Demonstrate skills and responsibilities relevant to target roles\n"
+                "Showcase career progression and increasing responsibility\b"
+                "Maintaining consistency in format and tone across all entries\n"
+
+                "The optimized 'Experience' Section should have the following features for each entry:\n"
+
+                "1. Job title accuracy and impact \n"
+                "2. Company name and brief description\n"
+                "3. Date range accuracy.\n"
+                "4. Content of job descriptions.\n"
+                "5. Use of action verbs and keywords.\n"
+                "6. Quantifiable achievements and results.\n"
+                "7. Relevance to career goals and target roles.\n"
+                " Return only the optimized 'Experience' Sections. "
+                
 
             )),
             HumanMessagePromptTemplate.from_template("About: {about} \n Questions and answers: {qa}"),
          ]
 
         )
-        self.newExperience = ChatPromptTemplate.from_messages(
-            [
-
-            SystemMessage(
-                content=(" You are an AI expert in LinkedIn profile optimization, "
-                "specializing in crafting compelling 'About' sections. "
-                "Your task is to analyze a user's current LinkedIn 'About', and review the answers the user gave "
-                "to create an optimized version of the 'About' Sections. Return only the optimized 'About' Sections. "
-                "The optimized 'About' Section should have the following features:\n"
-                "1. Is between 2000-2600 characters (LinkedIn's limit) \n"
-                "2. Starts with a strong, attention-grabbing opening statement\n"
-                "3. Clearly communicates the user's professional identity and value proposition.\n"
-                "4. Incorporates relevant industry keywords naturally.\n"
-                "5. Highlights key achievements and skills with specific examples.\n"
-                "6. Includes a brief career narrative that showcases progression and expertise.\n"
-                "7. Ends with a clear call-to-action or statement of career aspirations.\n"
-                "8. Uses a mix of short paragraphs and bullet points for readability.\n"
-                "9. Maintains a professional yet personable tone.\n"
-
-            )),
-            HumanMessagePromptTemplate.from_template("experience: {experience} \n "),
-            ]
-
-        )
-
+    
         self.newProjects = ChatPromptTemplate.from_messages(
             [
 
             SystemMessage(
                 content=(" You are an AI expert in LinkedIn profile optimization, "
-                "specializing in crafting compelling 'About' sections. "
-                "Your task is to analyze a user's current LinkedIn 'About', and review the answers the user gave "
-                "to create an optimized version of the 'About' Sections. Return only the optimized 'About' Sections. "
-                "The optimized 'About' Section should have the following features:\n"
-                "1. Is between 2000-2600 characters (LinkedIn's limit) \n"
-                "2. Starts with a strong, attention-grabbing opening statement\n"
-                "3. Clearly communicates the user's professional identity and value proposition.\n"
-                "4. Incorporates relevant industry keywords naturally.\n"
-                "5. Highlights key achievements and skills with specific examples.\n"
-                "6. Includes a brief career narrative that showcases progression and expertise.\n"
-                "7. Ends with a clear call-to-action or statement of career aspirations.\n"
-                "8. Uses a mix of short paragraphs and bullet points for readability.\n"
-                "9. Maintains a professional yet personable tone.\n"
+                "specializing in crafting compelling 'Projects' sections. "
+                "Your task is to analyze a user's current LinkedIn 'Projects' section and "
+                "to create an optimized version of the 'Projects' Sections."
+                "The 'Projects' Section should be optimzed by following these steps:\n"
+                    "1. Project title clarity and impact\n"
+                    "2. Project description content and length\n"
+                    "3. Start and end dates (if applicable)\n"
+                    "4. Team size and user's role (if mentioned)\n"
+                    "5. Technologies or skills utilized\n"
+                    "6. Measurable outcomes or results\n"
+                    "7. Relevance to career goals and target roles\n"
+                    "8. Concise comprehensive project description that "
+                    "Clearly explains the project's purpose and scope, "
+                    "Highlights the user's specific contributions and responsibilities, "
+                    "Incorporates relevant industry keywords and technologies used. "
+                    "Showcases measurable outcomes, achievements, or learnings and "
+                    "Demonstrates skills relevant to the user's target roles \n "
+                    "9 . Maintain a consistent format and tone across all entries\n"
+                    "10. Prioritize projects that are most relevant to the user's current career goals or demonstrate key skills for their target roles.\n"
+                    "11. Ensure the overall 'Projects' section:\n"
+                    "Complements the 'Experience' section without unnecessary duplication, "
+                    "Demonstrates a range of skills and competencies, "
+                    "Aligns with the user's stated career goals and target roles and "
+                    "Stays within LinkedIn's character limits for each entry\n"
 
+
+                " Return only the optimized 'Projects' Sections. "
             )),
-            HumanMessagePromptTemplate.from_template("projects: {projects} "),
+            HumanMessagePromptTemplate.from_template("projects: {projects}, experience: {experience} "),
             ]
 
         )
@@ -296,10 +297,10 @@ class LLM_Bot:
             # Implement logic to handle the rate limit
             time.sleep(60)
 
-    def getNewProjects(self, projects: str) -> str:
+    def getNewProjects(self, projects: str,experience:str) -> str:
         chain = LLMChain(self.llm, self.newProjects)
         try:
-            res = chain.invoke({'projects': projects})
+            res = chain.invoke({'projects': projects,"experience" : experience})
             return res['text']
         except RateLimitError as e:
             print("Rate limit exceeded. Please try again later.")

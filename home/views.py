@@ -34,6 +34,7 @@ def scrape(request):
         try:
             # Make a POST request to the Flask API
             response = requests.post(f"{SCRAPER_API_URL}/scrape", headers=headers, json={'url': url})
+            print(response)
             response_data = response.json()
 
             if response_data['status'] == 'success':
@@ -123,7 +124,7 @@ def getRecommendation(request):
 
 
         newExperience = llm_bot.getNewExperience(experience)
-        newProjects = llm_bot.getNewProjects(projects)
+        newProjects = llm_bot.getNewProjects(projects,experience)
 
 
 
