@@ -4,6 +4,8 @@ import markdown
 import requests
 from gpt_llm.llm_bot import LLM_Bot
 from django.contrib import messages
+from django.http import JsonResponse
+from django.http import request
 import json
 import logging
 logger = logging.getLogger(__name__)
@@ -19,9 +21,7 @@ def index(request):
 
 SCRAPER_API_URL = os.getenv('SCRAPER_API_URL')
 print("SCRAPER_API_URL", SCRAPER_API_URL)
-headers = {
-    'ngrok-skip-browser-warning': 'true'
-}
+
 
 
 def scrape(request):
@@ -32,22 +32,28 @@ def scrape(request):
             return redirect('index')
 
         try:
+            headers = {
+                    'ngrok-skip-browser-warning': 'true'
+                }
             # Make a POST request to the Flask API
-            response = requests.post(f"{SCRAPER_API_URL}/scrape", headers=headers, json={'url': url})
+            print(url)
+            response = requests.post(f"{SCRAPER_API_URL}", headers=headers, json={'url': url})
             print(response)
             response_data = response.json()
-
+            print(response_data)
             if response_data['status'] == 'success':
                 request.session['data'] = response_data['data']
+                print("Data",response_data['data'])
             else:
                 raise Exception(response_data.get('message', 'Unknown error'))
 
         except Exception as e:
             logger.info("Exception occurred while scraping: %s", e)
-            messages.error(request, 'Could not scrape your profile. Please manually fill this form')
+            messages.error(request, f'{e}. Please manually fill this form')
             return redirect('manualUpload')
 
         # Pass the screenshot URL directly to the template
+        print("HERE")
         return render(request, 'scrape.html', {'url': url, 'screenshot': response_data['data']['screenshot_url']})
     
     return redirect('index')
@@ -149,3 +155,21 @@ def getRecommendation(request):
 
 def manualUpload(request):
     return render(request,'manualUpload.html')
+
+
+def regenerate(request):
+    types = {
+        "about": llm_bot.regenAbout,
+        "headline": llm_bot.regenHeadline,
+        "experience": llm_bot.regenExperience,
+        "projects": llm_bot.regenProjects
+    }
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        print(data)
+        
+        function = types[data['section']]
+        res = function(data['text'])
+        res = types[data['section']](data['text'])
+        
+        return  JsonResponse({"res":res})

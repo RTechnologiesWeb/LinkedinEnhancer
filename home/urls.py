@@ -8,5 +8,6 @@ urlpatterns = [
     path('getQuestions', views.getQuestions, name='getQuestions'),
     path('getRecommendation', views.getRecommendation, name='getRecommendation'),
     path('manualUpload', views.manualUpload, name='manualUpload'),
+    path("regenerate", views.regenerate, name="regenerate")
     
 ]
