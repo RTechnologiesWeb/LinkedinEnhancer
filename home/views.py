@@ -21,8 +21,11 @@ def index(request):
 
 SCRAPER_API_URL = os.getenv('SCRAPER_API_URL')
 print("SCRAPER_API_URL", SCRAPER_API_URL)
+SCRAPER_API_URL = 'https://4ace-124-29-227-46.ngrok-free.app/'
 
-
+headers = {
+    'ngrok-skip-browser-warning': 'true'
+}
 
 def scrape(request):
     if request.method == 'POST':
@@ -33,17 +36,24 @@ def scrape(request):
 
         try:
             headers = {
-                    'ngrok-skip-browser-warning': 'true'
-                }
-            # Make a POST request to the Flask API
-            print(url)
-            response = requests.post(f"{SCRAPER_API_URL}", headers=headers, json={'url': url})
-            print(response)
+                'ngrok-skip-browser-warning': 'true'
+            }
+
+            # Debug: check the URL
+            print("SCRAPER_API_URL:", SCRAPER_API_URL)
+
+            # Make a POST request to the Flask API with the correct /scrape endpoint
+            response = requests.post(f"{SCRAPER_API_URL}/scrape", headers=headers, json={'url': url})
+            print("Response Status Code:", response.status_code)
+            print("Response Text:", response.text)
+
+            # Try to parse JSON response
             response_data = response.json()
-            print(response_data)
+
+            # Check if the response is successful
             if response_data['status'] == 'success':
                 request.session['data'] = response_data['data']
-                print("Data",response_data['data'])
+                print("Data:", response_data['data'])
             else:
                 raise Exception(response_data.get('message', 'Unknown error'))
 
@@ -53,10 +63,43 @@ def scrape(request):
             return redirect('manualUpload')
 
         # Pass the screenshot URL directly to the template
-        print("HERE")
         return render(request, 'scrape.html', {'url': url, 'screenshot': response_data['data']['screenshot_url']})
     
     return redirect('index')
+
+# def scrape(request):
+#     if request.method == 'POST':
+#         url = request.POST.get('url')
+#         if not url.startswith('https'):
+#             messages.error(request, 'Please enter a valid URL starting with https://')
+#             return redirect('index')
+
+#         try:
+#             headers = {
+#                     'ngrok-skip-browser-warning': 'true'
+#                 }
+#             # Make a POST request to the Flask API
+#             print(url)
+#             response = requests.post(f"{SCRAPER_API_URL}", headers=headers, json={'url': url})
+#             print(response)
+#             response_data = response.json()
+#             print(response_data)
+#             if response_data['status'] == 'success':
+#                 request.session['data'] = response_data['data']
+#                 print("Data",response_data['data'])
+#             else:
+#                 raise Exception(response_data.get('message', 'Unknown error'))
+
+#         except Exception as e:
+#             logger.info("Exception occurred while scraping: %s", e)
+#             messages.error(request, f'{e}. Please manually fill this form')
+#             return redirect('manualUpload')
+
+#         # Pass the screenshot URL directly to the template
+#         print("HERE")
+#         return render(request, 'scrape.html', {'url': url, 'screenshot': response_data['data']['screenshot_url']})
+    
+#     return redirect('index')
 
 def getQuestions(request):
     logger.info("getQuestions view called")
