@@ -85,8 +85,8 @@ def getQuestions(request):
         logger.info(f"Retrieved {numOfAboutQuestions} about questions successfully and {numOfHeadlineQuestions} headline questions successfully.")
 
         return render(request, 'questions.html', {
-            'questionsAbout': questions_about,
-            'questionsHeadline': questions_headline,
+            'questions_about': questions_about,
+            'questions_headline': questions_headline,
             'numOfAboutQuestions': numOfAboutQuestions,
             'numOfHeadlineQuestions': numOfHeadlineQuestions,
             'about': about,
