@@ -1,13 +1,21 @@
 from pathlib import Path
 import dj_database_url
-from dotenv import load_dotenv
 import os
 import pymysql
+import environ
 
-load_dotenv()
+
+env = environ.Env(
+    # set casting, default value
+    DEBUG=(bool, False)
+)
+environ.Env.read_env()
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
+
 import os
 pymysql.install_as_MySQLdb()
 
@@ -25,10 +33,10 @@ LOGGING = {
     },
 }
 
-SECRET_KEY = os.getenv('DJANGO_SECRET')
+SECRET_KEY = env('DJANGO_SECRET')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True #os.getenv('DJANGO_DEBUG', 'False') == 'True'
+DEBUG = True #env('DJANGO_DEBUG', 'False') == 'True'
 
 ALLOWED_HOSTS = ["*"]
 CSRF_TRUSTED_ORIGINS = [
@@ -85,10 +93,9 @@ TEMPLATES = [
 WSGI_APPLICATION = 'linkedin.wsgi.application'
 
 
-
 DATABASES = {
     'default': dj_database_url.config(
-        default=os.getenv('DATABASE_PUBLIC_URL', ''),
+        default=env('DATABASE_URL', default=''),  # Correct usage here
         conn_max_age=600,
     )
 }

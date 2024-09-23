@@ -1,160 +1,274 @@
-
-
-
 {% extends 'base.html' %}
 {% block title %}
   Home
 {% endblock title %}    
 
-
 {% block body %}
 <style>
   .loader {
-  width: 2.5em;
-  height: 2.5em;
-  transform: rotate(165deg);
-}
-.loader:before, .loader:after {
-  content: "";
-  position: absolute;
-  top: 30%;
-  left: 50%;
-  display: block;
-  width: 0.5em;
-  height: 0.5em;
-  border-radius: 0.25em;
-  transform: translate(-50%, -50%);
-}
-.loader:before {
-  animation: before 2s infinite;
-}
-.loader:after {
-  animation: after 2s infinite;
-}
-
-@keyframes before {
-  0% {
-    width: 0.5em;
-    box-shadow: 1em -0.5em rgba(225, 20, 98, 0.75), -1em 0.5em rgba(111, 202, 220, 0.75);
-  }
-  35% {
     width: 2.5em;
-    box-shadow: 0 -0.5em rgba(225, 20, 98, 0.75), 0 0.5em rgba(111, 202, 220, 0.75);
-  }
-  70% {
-    width: 0.5em;
-    box-shadow: -1em -0.5em rgba(225, 20, 98, 0.75), 1em 0.5em rgba(111, 202, 220, 0.75);
-  }
-  100% {
-    box-shadow: 1em -0.5em rgba(225, 20, 98, 0.75), -1em 0.5em rgba(111, 202, 220, 0.75);
-  }
-}
-@keyframes after {
-  0% {
-    height: 0.5em;
-    box-shadow: 0.5em 1em rgba(61, 184, 143, 0.75), -0.5em -1em rgba(233, 169, 32, 0.75);
-  }
-  35% {
     height: 2.5em;
-    box-shadow: 0.5em 0 rgba(61, 184, 143, 0.75), -0.5em 0 rgba(233, 169, 32, 0.75);
+    transform: rotate(165deg);
   }
-  70% {
+  .loader:before, .loader:after {
+    content: "";
+    position: absolute;
+    top: 30%;
+    left: 50%;
+    display: block;
+    width: 0.5em;
     height: 0.5em;
-    box-shadow: 0.5em -1em rgba(61, 184, 143, 0.75), -0.5em 1em rgba(233, 169, 32, 0.75);
+    border-radius: 0.25em;
+    transform: translate(-50%, -50%);
   }
-  100% {
-    box-shadow: 0.5em 1em rgba(61, 184, 143, 0.75), -0.5em -1em rgba(233, 169, 32, 0.75);
+  .loader:before {
+    animation: before 2s infinite;
   }
-}
-#profileTips {
- transition: all .75s ease-in-out;
-}
-/**
- * Attempt to center the whole thing!
- */
-html,
-body {
-  height: 100%;
-}
+  .loader:after {
+    animation: after 2s infinite;
+  }
+  @keyframes before {
+    0% {
+      width: 0.5em;
+      box-shadow: 1em -0.5em rgba(225, 20, 98, 0.75), -1em 0.5em rgba(111, 202, 220, 0.75);
+    }
+    35% {
+      width: 2.5em;
+      box-shadow: 0 -0.5em rgba(225, 20, 98, 0.75), 0 0.5em rgba(111, 202, 220, 0.75);
+    }
+    70% {
+      width: 0.5em;
+      box-shadow: -1em -0.5em rgba(225, 20, 98, 0.75), 1em 0.5em rgba(111, 202, 220, 0.75);
+    }
+    100% {
+      box-shadow: 1em -0.5em rgba(225, 20, 98, 0.75), -1em 0.5em rgba(111, 202, 220, 0.75);
+    }
+  }
+  @keyframes after {
+    0% {
+      height: 0.5em;
+      box-shadow: 0.5em 1em rgba(61, 184, 143, 0.75), -0.5em -1em rgba(233, 169, 32, 0.75);
+    }
+    35% {
+      height: 2.5em;
+      box-shadow: 0.5em 0 rgba(61, 184, 143, 0.75), -0.5em 0 rgba(233, 169, 32, 0.75);
+    }
+    70% {
+      height: 0.5em;
+      box-shadow: 0.5em -1em rgba(61, 184, 143, 0.75), -0.5em 1em rgba(233, 169, 32, 0.75);
+    }
+    100% {
+      box-shadow: 0.5em 1em rgba(61, 184, 143, 0.75), -0.5em -1em rgba(233, 169, 32, 0.75);
+    }
+  }
 
-.loader {
-  position: absolute;
-  top: calc(50% - 1.25em);
-  left: calc(50% - 1.25em);
-}
-</style>  
+  #profileTips {
+    transition: all .75s ease-in-out;
+  }
 
-<div class="container h-75 d-flex ">
+  .progress {
+    height: 2rem;
+    width: 100%;
+    position: relative;
+  }
+
+  .progress-bar {
+    transition: width 1s ease;
+  }
+
+  #progressPercentage {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    font-weight: bold;
+    color: black;
+  }
+
+  .countdown {
+    text-align: center;
+    margin-top: 10px;
+    font-size: 1.5rem;
+  }
+
+  #navigateButton {
+    margin-top: 15px;
+    width: 100%;
+    text-align: center;
+  }
+
+  .d-flex .justify-content-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  html,
+  body {
+    height: 100%;
+  }
+
+</style>
+
+
+<div class="container h-75 d-flex">
   
-            <div class="col-12 d-flex justify-content-center align-items-center  " id="formDiv">
-                <form action="{% url 'scrape' %}" method="post">
-                    {% csrf_token %}
-                    <div class="mb-3">
-                      <h3>
-                        Try for free
-                      </h3>
-                    </div>
-                    <div class="mb-3" style="width: 50vw;">
-                      <label for="url" class="form-label">Enter your Linkedin URL (include https)</label>
-                      <input type="text" name="url" class="form-control" id="url">
-                    </div>
-          
-                    <button type="submit" class="btn btn-primary">Submit</button>
-                  </form>
-            </div>
+  <div class="col-12 d-flex justify-content-center align-items-center" id="formDiv">
+    <form action="{% url 'scrape' %}" method="post">
+      {% csrf_token %}
+      <div class="mb-3">
+        <h3>Try for free</h3>
+      </div>
+      <div class="mb-3" style="width: 50vw;">
+        <label for="url" class="form-label">Enter your Linkedin URL (include https)</label>
+        <input type="text" name="url" class="form-control" id="url">
+      </div>
+      <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+  </div>
 
-            <div id="spinner" class="col-12 d-flex justify-content-center align-items-center d-none">
-              
-              <div class="loader"></div>
-              <h4 class="py-5" id="profileTips"> Scraping Your Profile</h4>
-            </div>
+  <!-- Progress bar and countdown section -->
+  <div id="spinner" class="col-12 d-flex justify-content-center align-items-center d-none">
+    <div>
+      <div class="loader"></div>
+      <h4 class="py-3" id="profileTips">Scraping Your Profile</h4>
+      
+      <div class="progress">
+        <div class="progress-bar bg-info" role="progressbar" style="width: 0%" id="progressBar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+          <span id="progressPercentage">0%</span> <!-- Percentage span inside progress bar -->
+        </div>
+      </div>
+      <div class="countdown" id="countdown">50 seconds remaining</div>
+    </div>
+  </div>
 </div>
 
-<script>
-    const profileTips = document.getElementById('profileTips');
 
-  const form = document.querySelector('form');
-  form.addEventListener('submit', async (e) => {
+<script>
+const profileTips = document.getElementById('profileTips');
+const form = document.querySelector('form');
+const countdownElement = document.getElementById('countdown');
+const progressBar = document.getElementById('progressBar');
+const progressPercentage = document.getElementById('progressPercentage');
+const spinner = document.querySelector('#spinner');
+let countdown = 50;  // Initial 50 seconds countdown
+let interval;  // Declare interval globally to clear it later
+
+form.addEventListener('submit', async (e) => {
+    e.preventDefault();  // Prevent default form submission
+    
+    // Hide form and show spinner
     const formDiv = document.querySelector('#formDiv');
     formDiv.classList.add('d-none');    
-    
-    const spinner = document.querySelector('#spinner');
     spinner.classList.remove('d-none');
     
-    setInterval(changeText, 5000);
-  }
-  
-)
+    // Start progress bar and timer
+    setInterval(changeText, 5000);  // Change tips every 5 seconds
+    startProgressBarAndTimer();  // Start the progress bar
+
+    // Send the form data via AJAX
+    const formData = new FormData(form);
+    try {
+        const response = await fetch(form.action, {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',  // Indicate it's an AJAX request
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error: ${response.status}`);
+        }
+
+        const result = await response.json();  // Parse JSON response from backend
+        
+        // Log the result for debugging
+        console.log("Response from server:", result);
+        
+        if (result.status === 'success') {
+            // Scraping completed successfully
+            countdownElement.innerText = 'Scraping complete!';
+            progressBar.style.width = '100%';
+            progressPercentage.innerText = '100%';  // Ensure 100% is displayed
+            clearInterval(interval);  // Clear the progress bar timer
+
+            // Create and display the "Get Recommendations" button
+            createNavigateButton();
+        } else {
+            countdownElement.innerText = 'An error occurred during scraping.';
+            console.error('Error: Invalid status in response:', result.message);
+            clearInterval(interval);
+        }
+
+    } catch (error) {
+        console.error('Error during scraping:', error);
+        countdownElement.innerText = 'An error occurred during scraping.';
+        clearInterval(interval);
+    }
+});
 
 async function changeText() {
-  profileTips.style.opacity = 0;
-  const messages = [
-  "Use a professional headshot for a great first impression!",
-  "Write a compelling headline to stand out!",
-  "Craft an engaging summary that tells your story.",
-  "List relevant skills to showcase your expertise.",
-  "Showcase your achievements and milestones.",
-  "Add rich media to make your profile pop!",
-  "Request recommendations for credibility.",
-  "Join industry groups to expand your network.",
-  "Customize your LinkedIn URL for a clean look.",
-  "Stay active and engage with your connections!"
-];
+    profileTips.style.opacity = 0;
+    const messages = [
+        "Use a professional headshot for a great first impression!",
+        "Write a compelling headline to stand out!",
+        "Craft an engaging summary that tells your story.",
+        "List relevant skills to showcase your expertise.",
+        "Showcase your achievements and milestones.",
+        "Add rich media to make your profile pop!",
+        "Request recommendations for credibility.",
+        "Join industry groups to expand your network.",
+        "Customize your LinkedIn URL for a clean look.",
+        "Stay active and engage with your connections!"
+    ];
 
-  console.log('changing text');
-  let msg = messages[Math.floor(Math.random() * messages.length)]
-  console.log(msg);
-  await sleep(750)
-  profileTips.innerHTML= msg;
-  await sleep(750)
-
-  profileTips.style.opacity = 1;
+    let msg = messages[Math.floor(Math.random() * messages.length)];
+    await sleep(750);
+    profileTips.innerHTML = msg;
+    await sleep(750);
+    profileTips.style.opacity = 1;
 }
-
 
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
-  }
+}
+
+function startProgressBarAndTimer() {
+    interval = setInterval(() => {
+        if (countdown > 0) {
+            countdown -= 1;
+            countdownElement.innerText = `${countdown} seconds remaining`;
+
+            const progressValue = ((50 - countdown) / 50) * 100;
+            progressBar.style.width = `${progressValue}%`;
+            progressPercentage.innerText = `${Math.round(progressValue)}%`;  // Update percentage text
+            progressBar.setAttribute('aria-valuenow', progressValue);
+        } else {
+            clearInterval(interval);
+            countdownElement.innerText = 'Scraping complete!';
+            progressBar.style.width = '100%';
+            progressPercentage.innerText = '100%';  // Ensure 100% is displayed
+        }
+    }, 1000);
+}
+
+function createNavigateButton() {
+    // Check if the button already exists to avoid duplicates
+    if (!document.querySelector('#navigateButton')) {
+        const navigateButton = document.createElement('button');
+        navigateButton.innerText = 'Get Recommendations';
+        navigateButton.classList.add('btn', 'btn-success', 'mt-3', 'w-100');  // Full width button
+        navigateButton.id = 'navigateButton';
+        navigateButton.style.marginTop = '15px';  // Add some space between the progress bar and button
+        navigateButton.onclick = function() {
+            window.location.href = "{% url 'getRecommendation' %}";  // Navigate to recommendations page
+        };
+        
+        // Append the button directly within the spinner div
+        spinner.querySelector('div').appendChild(navigateButton);
+    }
+}
 </script>
 
-  {% endblock body %}
+{% endblock body %}

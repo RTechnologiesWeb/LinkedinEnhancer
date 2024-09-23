@@ -16,14 +16,18 @@ from langchain_core.messages import SystemMessage
 from langchain_core.prompts import HumanMessagePromptTemplate
 import os
 
-from dotenv import load_dotenv
-load_dotenv()
+import environ
+
+# Initialize environment variables
+env = environ.Env()
+environ.Env.read_env()
+
+OPENAI_API_KEY = env('OPENAI_API_KEY')
 
 # we can re structure this to ask questions relevant to the section we are about to update only 
 # This would results in more relevant questions and less token usage
 
-OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
-print("API_KEY: ", OPENAI_API_KEY)
+
 class LLM_Bot:
     def __init__(self) -> None:
         self.headlineQPrompt = ChatPromptTemplate.from_messages([
