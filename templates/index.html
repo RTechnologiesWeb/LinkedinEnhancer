@@ -188,7 +188,7 @@ form.addEventListener('submit', async (e) => {
         
         if (result.status === 'success') {
             // Scraping completed successfully
-            countdownElement.innerText = 'Scraping complete!';
+            countdownElement.innerText = 'Scraping complete! Please wait while we analyze your data.';
             progressBar.style.width = '100%';
             progressPercentage.innerText = '100%';  // Ensure 100% is displayed
             clearInterval(interval);  // Clear the progress bar timer
