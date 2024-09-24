@@ -26,12 +26,12 @@
           
           <div class="mb-5 py-5 col-6" ">
             <h2 for="about" class="form-label text-center">Current Headline:</h2>
-            <div class="form-control" name="CurrentHeadline" id="CurrentHeadline" disabled style="height: auto; white-space: pre-wrap; border: 1px solid #ced4da; background-color: #e9ecef;">Software Engineer | Python Developer | Django Expert | React Developer{{ headline|safe }}</div>
+            <div class="form-control" name="CurrentHeadline" id="CurrentHeadline" disabled style="height: auto; white-space: pre-wrap; border: 1px solid #ced4da; background-color: #e9ecef;">{{ headline|safe }}</div>
           </div>
   
           <div class="mb-5 py-5 col-6">
             <h2 for="about" class="form-label text-center">Recommended Headline:</h2>
-            <div class="form-control" name="RecommendedHeadline" id="recommended-headline" disabled style="height: auto; white-space: pre-wrap; border: 1px solid #ced4da; background-color: #e9ecef;">Software Engineer | Python Developer | Django Expert | React Developer{{ newHeadline|safe }}</div>
+            <div class="form-control" name="RecommendedHeadline" id="recommended-headline" disabled style="height: auto; white-space: pre-wrap; border: 1px solid #ced4da; background-color: #e9ecef;">{{ newHeadline|safe }}</div>
             <div class="my-2 d-flex justify-content-around">
               <button  type='button' class="btn btn-primary regen-btn"" data-value='headline' Headline">Regenerate</button>
               <button  type='button' class="btn btn-primary copy-btn" data-value='headline' id="copyHeadline">Copy</button>
@@ -43,14 +43,14 @@
 
 
 
-          <div class="mb-5 py-5 col-6" ">
+          <div class="mb-5 py-5 col-6">
             <h2 for="about" class="form-label text-center">Current About:</h2>
-            <div class="form-control" name="about" id="about" disabled style="height: auto; white-space: pre-wrap; border: 1px solid #ced4da; background-color: #e9ecef;">I am a software engineer with 5 years of experience in web development. I have worked on multiple projects using Python, Django, and React. I am passionate about creating scalable web applications that provide value to users.{{ about|safe }}</div>
+            <div class="form-control" name="about" id="about" disabled style="height: auto; white-space: pre-wrap; border: 1px solid #ced4da; background-color: #e9ecef;">{{ about|safe }}</div>
           </div>
           
           <div class="mb-5 py-5 col-6">
             <h2 for="about" class="form-label text-center">Recommended About:</h2>
-            <div class="form-control" name="RecommendedAbout" id="recommended-about" disabled style="height: auto; white-space: pre-wrap; border: 1px solid #ced4da; background-color: #e9ecef;">I am a software engineer with 5 years of experience in web development. I have worked on multiple projects using Python, Django, and React. I am passionate about creating scalable web applications that provide value to users.{{ newAbout|safe }}</div>
+            <div class="form-control" name="RecommendedAbout" id="recommended-about" disabled style="height: auto; white-space: pre-wrap; border: 1px solid #ced4da; background-color: #e9ecef;">{{ newAbout|safe }}</div>
             <div class="my-2 d-flex justify-content-around">
               <button  type='button' class="btn btn-primary regen-btn"" data-value='about' About">Regenerate</button>
               <button  type='button' class="btn btn-primary copy-btn" data-value='about' id="copyAbout">Copy</button>
@@ -59,13 +59,12 @@
 
 
 
-          <div class="mb-5 py-5 col-12">
+          <!-- <div class="mb-5 py-5 col-12">
             <h2 for="about" class="form-label text-center">Recommendedations Regariding Skills Section:</h2>
             <div class="form-control" name="skillsRecomendation" id="skillsRecomendation" disabled style="height: auto; white-space: pre-wrap; border: 1px solid #ced4da; background-color: #e9ecef;">
               The Skills section is crucial for LinkedIn's algorithm. It's how employers find suitable candidates. Avoid listing too many skills (max 50), focus on relevant ones, and arrange them by importance. For career changers, highlight transferable skills.  Include both hard and soft skills. Get endorsements to boost credibility. Ask connections for endorsements using a personalized message, highlighting shared experiences.
-
             </div>
-          </div>
+          </div> -->
 
 
 
@@ -89,10 +88,7 @@
           <div class="mb-5 py-5 col-12" ">
             <h2 for="LinkedinRecommendations" class="form-label text-center">Linkedin  Recommendations :</h2>
             <div class="form-control" name="LinkedinRecommendations" id="LinkedinRecommendations" disabled style="height: auto; white-space: pre-wrap; border: 1px solid #ced4da; background-color: #e9ecef;">
-              Would you ever buy something on Amazon with zero reviews? Heck no! Same goes for your LinkedIn profile - you need that social proof.
-              Imagine you're a hiring manager looking at two candidate profiles. One has 15 glowing recommendations raving about this person’s skills and accomplishments. The other has 1 or 2 generic recommendations, or maybe even zero. Which one are you going to be more impressed by and call in for an interview? The choice is obvious!
-              So get out there and leverage your network to snag some top-notch recommendations. Focus on glowing endorsements from past bosses, coworkers, or clients who can really sing your praises. Make sure they're concrete, quantitative, and tailored to your goals. Don't be shy - a little friendly follow-up can work wonders. Quite possibly, your next job may depend on it. 
-
+          
             </div>
           </div>
 
@@ -109,7 +105,7 @@
               {{ newProjects|safe }}
             </div>
             <div class="my-2 d-flex justify-content-around">
-              <button  type='button' class="btn btn-primary regen-btn" data-value='projects' Proj">Regenerate</button>
+              <button  type='button' class="btn btn-primary regen-btn" data-value='projects'>Regenerate</button>
               <button  type='button' class="btn btn-primary copy-btn" data-value="projects" id= "copyProj">Copy</button>
             </div>
           </div>

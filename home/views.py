@@ -217,6 +217,7 @@ def preprocess_text(text):
 def getRecommendation(request):
     # Check if data is available in the session
     scraped_data = request.session.get('scraped_data')
+    print("Scrapped data is available in the session: "+ scraped_data.get('about'))
     if not scraped_data:
         return redirect('index')  # Redirect back to the index if no data is available in the session
 
