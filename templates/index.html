@@ -153,6 +153,7 @@ const progressPercentage = document.getElementById('progressPercentage');
 const spinner = document.querySelector('#spinner');
 let countdown = 50;  // Initial 50 seconds countdown
 let interval;  // Declare interval globally to clear it later
+let pollingInterval;
 
 form.addEventListener('submit', async (e) => {
     e.preventDefault();  // Prevent default form submission
@@ -186,20 +187,28 @@ form.addEventListener('submit', async (e) => {
         // Log the result for debugging
         console.log("Response from server:", result);
         
-        if (result.status === 'success') {
-            // Scraping completed successfully
-            countdownElement.innerText = 'Scraping complete! Please wait while we analyze your data.';
-            progressBar.style.width = '100%';
-            progressPercentage.innerText = '100%';  // Ensure 100% is displayed
-            clearInterval(interval);  // Clear the progress bar timer
-
-            // Create and display the "Get Recommendations" button
-            createNavigateButton();
+        if (result.status === 'pending') {
+            startPollingForCompletion();  // Start polling if scraping is pending
+        } else if (result.status === 'success') {
+            finishScraping();  // Complete scraping directly
         } else {
-            countdownElement.innerText = 'An error occurred during scraping.';
-            console.error('Error: Invalid status in response:', result.message);
-            clearInterval(interval);
+            handleError();
         }
+
+        // if (result.status === 'success') {
+        //     // Scraping completed successfully
+        //     countdownElement.innerText = 'Scraping complete! Please wait while we analyze your data.';
+        //     progressBar.style.width = '100%';
+        //     progressPercentage.innerText = '100%';  // Ensure 100% is displayed
+        //     clearInterval(interval);  // Clear the progress bar timer
+
+        //     // Create and display the "Get Recommendations" button
+        //     createNavigateButton();
+        // } else {
+        //     countdownElement.innerText = 'An error occurred during scraping.';
+        //     console.error('Error: Invalid status in response:', result.message);
+        //     clearInterval(interval);
+        // }
 
     } catch (error) {
         console.error('Error during scraping:', error);
@@ -253,6 +262,19 @@ function startProgressBarAndTimer() {
     }, 1000);
 }
 
+function startPollingForCompletion() {
+    // Polling the backend every 5 seconds to check if the scraping is complete
+    pollingInterval = setInterval(async () => {
+        const response = await fetch('/scraping-status');  // Adjust to the actual endpoint
+        const result = await response.json();
+
+        if (result.status === 'success') {
+            finishScraping();
+            clearInterval(pollingInterval);  // Stop polling
+        }
+    }, 5000);
+}
+
 function createNavigateButton() {
     // Check if the button already exists to avoid duplicates
     if (!document.querySelector('#navigateButton')) {
@@ -268,6 +290,21 @@ function createNavigateButton() {
         // Append the button directly within the spinner div
         spinner.querySelector('div').appendChild(navigateButton);
     }
+}
+
+function finishScraping() {
+    countdownElement.innerText = 'Scraping complete! Please wait while we analyze your data.';
+    progressBar.style.width = '100%';
+    progressPercentage.innerText = '100%';  // Ensure 100% is displayed
+    clearInterval(interval);  // Clear the progress bar timer
+
+    // Create and display the "Get Recommendations" button
+    createNavigateButton();
+}
+
+function handleError() {
+    countdownElement.innerText = 'An error occurred during scraping.';
+    clearInterval(interval);
 }
 </script>
 
