@@ -158,190 +158,6 @@
   </div>
 </div>
 
-<!-- <script>
-const profileTips = document.getElementById('profileTips');
-const form = document.querySelector('form');
-const countdownElement = document.getElementById('countdown');
-const progressBar = document.getElementById('progressBar');
-const progressPercentage = document.getElementById('progressPercentage');
-const spinner = document.querySelector('#spinner');
-let countdown = 80;  // Initial 50 seconds countdown
-let interval;  // Declare interval globally to clear it later
-let pollingInterval;
-let tryAgainButton, manualButton;
-
-form.addEventListener('submit', async (e) => {
-    e.preventDefault();  // Prevent default form submission
-    startScrapingProcess(new FormData(form));  // Initiate the scraping process
-});
-
-function startScrapingProcess(formData) {
-    resetProgressBarAndTimer();  // Reset progress bar and timer
-    hideFormAndShowSpinner();  // Hide the form and show spinner
-    setInterval(changeText, 5000);  // Change tips every 5 seconds
-    startProgressBarAndTimer();  // Start the progress bar and timer
-
-    // Send the form data via AJAX
-    submitForm(formData);
-}
-
-
-function submitForm(formData) {
-    fetch(form.action, {
-        method: 'POST',
-        body: formData,
-        headers: {
-            'X-Requested-With': 'XMLHttpRequest',  // Indicate it's an AJAX request
-        }
-    })
-    .then(response => {
-        // Check if the response is valid and can be parsed as JSON
-        if (!response.ok) {
-            throw new Error(`HTTP error: ${response.status}`);
-        }
-        return response.json().catch(err => {
-            throw new Error('Invalid JSON response from the server.');
-        });
-    })
-    .then(result => {
-        if (result.status === 'success') {
-            // Scraping succeeded, show the "Get Recommendations" button
-            finishScraping(result.data);  
-        } else {
-            // Scraping failed, handle the error with a proper message
-            handleError(result.message || 'Scraping failed. Please try again.');
-        }
-    })
-    .catch(error => {
-        console.error('Error during scraping:', error);
-        handleError(`Error: ${error.message || 'An error occurred during scraping. Server may be unresponsive.'}`);
-    });
-}
-
-
-function resetProgressBarAndTimer() {
-    let countdown = 80; 
-    progressBar.style.width = '0%';
-    progressPercentage.innerText = '0%';
-    clearInterval(interval);
-}
-function startProgressBarAndTimer() {
-    interval = setInterval(() => {
-        if (countdown > 0) {
-            countdown -= 1;
-            countdownElement.innerText = `${countdown} seconds remaining`;
-            const progressValue = ((50 - countdown) / 50) * 100;
-            progressBar.style.width = `${progressValue}%`;
-            progressPercentage.innerText = `${Math.round(progressValue)}%`;  // Update percentage text
-        } else {
-            clearInterval(interval);
-            countdownElement.innerText = 'Scraping complete! Please wait while we analyze your data.';
-            progressBar.style.width = '100%';
-            progressPercentage.innerText = '100%';  // Ensure 100% is displayed
-        }
-    }, 1000);
-}
-
-function hideFormAndShowSpinner() {
-    const formDiv = document.querySelector('#formDiv');
-    formDiv.classList.add('d-none');    
-    spinner.classList.remove('d-none');
-}
-
-function finishScraping(data) {
-    clearInterval(interval);
-    countdownElement.innerText = 'Scraping complete! Lets proceed with recommendations';
-    progressBar.style.width = '100%';
-    progressPercentage.innerText = '100%';
-
-    createNavigateButton();  // Create "Get Recommendations" button
-    resetErrorButtons();  // Remove error buttons, if any
-}
-
-function handleError(errorMessage) {
-    clearInterval(interval);
-    countdownElement.innerText = errorMessage || 'An error occurred during scraping.';
-    reEnableTryAgainButton();  // Ensure the "Try Again" button is re-enabled
-    createErrorButtons();  // Show Try Again and Enter Manually buttons
-}
-function reEnableTryAgainButton() {
-    if (tryAgainButton) {
-        tryAgainButton.classList.remove('disabled-btn');  // Re-enable the "Try Again" button
-    }
-}
-
-async function changeText() {
-    profileTips.style.opacity = 0;
-    const messages = [
-        "Use a professional headshot for a great first impression!",
-        "Write a compelling headline to stand out!",
-        "Craft an engaging summary that tells your story.",
-        "List relevant skills to showcase your expertise.",
-        "Showcase your achievements and milestones.",
-        "Add rich media to make your profile pop!",
-        "Request recommendations for credibility.",
-        "Join industry groups to expand your network.",
-        "Customize your LinkedIn URL for a clean look.",
-        "Stay active and engage with your connections!"
-    ];
-
-    let msg = messages[Math.floor(Math.random() * messages.length)];
-    await sleep(750);
-    profileTips.innerHTML = msg;
-    await sleep(750);
-    profileTips.style.opacity = 1;
-}
-
-function sleep(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-}
-
-function createNavigateButton() {
-    if (!document.querySelector('#navigateButton')) {
-        const navigateButton = document.createElement('button');
-        navigateButton.innerText = 'Get Recommendations';
-        navigateButton.classList.add('btn', 'btn-success', 'mt-3', 'w-100');
-        navigateButton.id = 'navigateButton';
-        navigateButton.onclick = function() {
-            navigateButton.classList.add('disabled-btn');  // Disable button to prevent multiple clicks
-            window.location.href = "{% url 'getRecommendation' %}";  // Navigate to recommendations page
-        };
-        spinner.querySelector('div').appendChild(navigateButton);
-    }
-}
-
-function createErrorButtons() {
-    if (!document.querySelector('#tryAgainButton') && !document.querySelector('#manualButton')) {
-        tryAgainButton = document.createElement('button');
-        tryAgainButton.innerText = 'Try Again';
-        tryAgainButton.classList.add('btn', 'btn-warning', 'mt-3', 'w-100');
-        tryAgainButton.id = 'tryAgainButton';
-        tryAgainButton.onclick = function() {
-            tryAgainButton.classList.add('disabled-btn');  // Disable button while retrying
-            startScrapingProcess(new FormData(form));  // Restart scraping process
-        };
-
-        manualButton = document.createElement('button');
-        manualButton.innerText = 'Enter Manually';
-        manualButton.classList.add('btn', 'btn-secondary', 'mt-3', 'w-100');
-        manualButton.id = 'manualButton';
-        manualButton.onclick = function() {
-            window.location.href = "{% url 'manualUpload' %}";  // Navigate to manual upload page
-        };
-
-        spinner.querySelector('div').appendChild(tryAgainButton);
-        spinner.querySelector('div').appendChild(manualButton);
-    }
-}
-function resetErrorButtons() {
-    if (tryAgainButton) tryAgainButton.remove();
-    if (manualButton) manualButton.remove();
-}
-
-</script> -->
-
-
-
 <script>
   const profileTips = document.getElementById('profileTips');
   const form = document.querySelector('form');
@@ -406,24 +222,36 @@ function resetErrorButtons() {
       progressPercentage.innerText = '0%';
       clearInterval(interval);
   }
-  
   function startProgressBarAndTimer() {
-      interval = setInterval(() => {
-          if (countdown > 0) {
-              countdown -= 1;
-              countdownElement.innerText = `${countdown} seconds remaining`;
-              const progressValue = ((80 - countdown) / 80) * 100;  // Updated to reflect 80-second countdown
-              progressBar.style.width = `${progressValue}%`;
-              progressPercentage.innerText = `${Math.round(progressValue)}%`;  // Update percentage text
-          } else {
-              clearInterval(interval);
-              countdownElement.innerText = 'Scraping complete! Please wait while we analyze your data.';
-              progressBar.style.width = '100%';
-              progressPercentage.innerText = '100%';  // Ensure 100% is displayed
-          }
-      }, 1000);
-  }
-  
+    // Add styles to the countdown element
+    countdownElement.style.height = '120px';            // Set the fixed height
+    countdownElement.style.maxHeight = '120px';         // Set the max height
+    countdownElement.style.overflow = 'hidden';         // Hide overflow content
+    countdownElement.style.textOverflow = 'ellipsis';   // Add ellipsis for overflow
+    countdownElement.style.whiteSpace = 'nowrap';       // Prevent wrapping
+    countdownElement.style.wordWrap = 'break-word';     // Break long words if necessary
+    countdownElement.style.padding = '10px';            // Add padding
+    countdownElement.style.backgroundColor = '#f9f9f9'; // Add background color
+    countdownElement.style.border = '1px solid #ddd';   // Add border
+    countdownElement.style.borderRadius = '5px';        // Add border radius
+    countdownElement.style.fontSize = '12px';           // Set the font size
+
+    interval = setInterval(() => {
+        if (countdown > 0) {
+            countdown -= 1;
+            countdownElement.innerText = `${countdown} seconds remaining`;
+            const progressValue = ((80 - countdown) / 80) * 100;  // Updated to reflect 80-second countdown
+            progressBar.style.width = `${progressValue}%`;
+            progressPercentage.innerText = `${Math.round(progressValue)}%`;  // Update percentage text
+        } else {
+            clearInterval(interval);
+            countdownElement.innerText = 'Scraping complete! Please wait while we analyze your data.';
+            progressBar.style.width = '100%';
+            progressPercentage.innerText = '100%';  // Ensure 100% is displayed
+        }
+    }, 1000);
+}
+
   function hideFormAndShowSpinner() {
       const formDiv = document.querySelector('#formDiv');
       formDiv.classList.add('d-none');    
@@ -515,6 +343,12 @@ function resetErrorButtons() {
       if (tryAgainButton) tryAgainButton.remove();
       if (manualButton) manualButton.remove();
   }
+
+  function reEnableTryAgainButton() {
+    if (tryAgainButton) {
+        tryAgainButton.classList.remove('disabled-btn');  // Re-enable the "Try Again" button
+    }
+}
   </script>
   
 {% endblock body %}
