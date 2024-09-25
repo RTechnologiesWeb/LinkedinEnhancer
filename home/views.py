@@ -214,18 +214,52 @@ def preprocess_text(text):
 #     return redirect('index')
 
 
+# def getRecommendation(request):
+#     # Check if data is available in the session
+#     scraped_data = request.session.get('scraped_data')
+#     print("Scrapped data is available in the session: "+ scraped_data.get('about'))
+#     if not scraped_data:
+#         return redirect('index')  # Redirect back to the index if no data is available in the session
+
+#     # Extract the relevant data from the session
+#     about = scraped_data.get('about')
+#     headline = scraped_data.get('headline')
+#     experience = scraped_data.get('experience')
+#     projects = scraped_data.get('projects')
+
+#     # Generate recommendations (or use as is)
+#     newAbout = llm_bot.getNewAbout(about, "")
+#     newHeadline = llm_bot.getNewHeadline(headline, "")
+#     newExperience = llm_bot.getNewExperience(experience)
+#     newProjects = llm_bot.getNewProjects(projects, experience)
+
+#     # Render the recommendations page with the data
+#     return render(request, 'recommendation.html', {
+#         'newAbout': newAbout,
+#         'about': about,
+#         'newHeadline': newHeadline,
+#         'headline': headline,
+#         'newExperience': newExperience,
+#         'experience': experience,
+#         'newProjects': newProjects,
+#         'projects': projects
+#     })
+
 def getRecommendation(request):
     # Check if data is available in the session
     scraped_data = request.session.get('scraped_data')
-    print("Scrapped data is available in the session: "+ scraped_data.get('about'))
+    
     if not scraped_data:
         return redirect('index')  # Redirect back to the index if no data is available in the session
-
+    
+    # Safe print statement, check if about exists
+    about = scraped_data.get('about', '')
+    print(f"Scraped data is available in the session: {about}")
+    
     # Extract the relevant data from the session
-    about = scraped_data.get('about')
-    headline = scraped_data.get('headline')
-    experience = scraped_data.get('experience')
-    projects = scraped_data.get('projects')
+    headline = scraped_data.get('headline', '')
+    experience = scraped_data.get('experience', '')
+    projects = scraped_data.get('projects', '')
 
     # Generate recommendations (or use as is)
     newAbout = llm_bot.getNewAbout(about, "")
@@ -244,7 +278,6 @@ def getRecommendation(request):
         'newProjects': newProjects,
         'projects': projects
     })
-
 
 
 def manualUpload(request):

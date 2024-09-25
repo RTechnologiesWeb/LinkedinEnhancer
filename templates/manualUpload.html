@@ -1,42 +1,53 @@
-
-
-
 {% extends 'base.html' %}
 {% block title %}
   Home
 {% endblock title %}    
 
-
 {% block body %}
-
-  
-<div class="container min-vh-100 d-flex ">
-  
-            <div class="col-12 d-flex justify-content-center align-items-center ">
-              <form action="{% url 'getQuestions' %}" method="post">
-                {% csrf_token %}
-                <div>
-                  <h3 class="mb-3">
+<div class="container min-vh-100 d-flex">
+    <div class="col-12 d-flex justify-content-center align-items-center">
+        <form action="{% url 'getRecommendation' %}" method="post">
+            {% csrf_token %}
+            <div>
+                <h3 class="mb-3">
                     Could not scrape the URL. Please enter the details manually
-                  </h3>
-                </div>
-                <div class="mb-3" style="width: 50vw;">
-                  <label for="about" class="form-label">Current Headline</label>
-                  <div>
-
-                    <textarea class="form-control" name="about" id="about" rows="1" ></textarea>
-                  </div>
-                </div>
-                <div class="mb-3" style="width: 50vw;">
-                  <label for="about" class="form-label">Current About</label>
-                  <div>
-
-                    <textarea class="form-control" name="about" id="about" rows="10" ></textarea>
-                  </div>
-                </div>
-                    <button type="submit" class="btn btn-primary">Submit</button>
-                  </form>
+                </h3>
             </div>
-</div>
+            
+            <!-- Headline -->
+            <div class="mb-3" style="width: 50vw;">
+                <label for="headline" class="form-label">Current Headline</label>
+                <div>
+                    <textarea class="form-control" name="headline" id="headline" rows="1"></textarea>
+                </div>
+            </div>
+            
+            <!-- About -->
+            <div class="mb-3" style="width: 50vw;">
+                <label for="about" class="form-label">Current About</label>
+                <div>
+                    <textarea class="form-control" name="about" id="about" rows="10"></textarea>
+                </div>
+            </div>
+            
+            <!-- Work Experience -->
+            <div class="mb-3" style="width: 50vw;">
+                <label for="experience" class="form-label">Work Experience</label>
+                <div>
+                    <textarea class="form-control" name="experience" id="experience" rows="5"></textarea>
+                </div>
+            </div>
+            
+            <!-- Projects -->
+            <div class="mb-3" style="width: 50vw;">
+                <label for="projects" class="form-label">Projects</label>
+                <div>
+                    <textarea class="form-control" name="projects" id="projects" rows="5"></textarea>
+                </div>
+            </div>
 
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </div>
+</div>
 {% endblock body %}

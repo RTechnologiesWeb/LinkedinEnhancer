@@ -70,7 +70,11 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
+    'linkedin.middleware.MaintenanceModeMiddleware',  # Replace 'yourapp' with your app name
+
 ]
+MAINTENANCE_MODE = os.getenv('MAINTENANCE_MODE', 'false').lower() == 'true'
+
 
 ROOT_URLCONF = 'linkedin.urls'
 
