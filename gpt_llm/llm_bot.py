@@ -1,32 +1,20 @@
+import os
+import time
+import environ
 from typing import Any
 from openai import RateLimitError
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
-import time
-from langchain.chains import LLMChain
-from langchain_core.prompts import PromptTemplate
 from langchain_openai.chat_models import ChatOpenAI
-
-import os
-
-from langchain_core.prompts import ChatPromptTemplate
-
+from langchain_core.prompts import ChatPromptTemplate, HumanMessagePromptTemplate
 from langchain_core.messages import SystemMessage
-from langchain_core.prompts import HumanMessagePromptTemplate
-import os
-
-import environ
 
 # Initialize environment variables
 env = environ.Env()
 environ.Env.read_env()
 
 OPENAI_API_KEY = env('OPENAI_API_KEY')
-
-# we can re structure this to ask questions relevant to the section we are about to update only 
-# This would results in more relevant questions and less token usage
-
 
 class LLM_Bot:
     def __init__(self) -> None:
@@ -490,15 +478,11 @@ class LLM_Bot:
                 # Implement logic to handle the rate limit
                 time.sleep(60)
 
-                
-
+            
 if __name__ == "__main__":
     bot = LLM_Bot()
     about = "I am a software engineer with 5 years of experience in web development. I have worked on multiple projects using Python, Django, and React. I am passionate about creating scalable web applications that provide value to users."
     headline = "Software Engineer | Python Developer | Django Expert | React Developer"
-    # print("About Questions:", bot.getAboutQuestions(about))
-    # print("Headline Questions:", bot.getHeadlineQuestions(headline,about))
-    # print("New About:", bot.getNewAbout(about, "Question 1: What is your current role? \n Answer 1: I am a software engineer at XYZ company."))
     print("New Headline:", bot.getNewHeadline(headline, "Question 1: What is your current role? \n Answer 1: I am a software engineer at XYZ company."))
     print("New Experience:", bot.getNewExperience("Software Engineer at XYZ Company (2019-Present)"))
     print("New Projects:", bot.getNewProjects("Project Manager at ABC Company (2017-2019)", "Software Engineer at XYZ Company (2019-Present)"))
